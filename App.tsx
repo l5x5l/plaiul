@@ -8,58 +8,21 @@
  * @format
  */
 
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, {type PropsWithChildren} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 import { Main } from './src/components/pages/main';
+import { Theme } from './src/type/theme';
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -73,32 +36,40 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown:false}}>
-          <Stack.Screen name='MAIN' component={Main}/>
+      <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name='MAIN' component={Main} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const darkTheme: Theme = {
+  dark: true,
+  colors: {
+    primary: '#D9CCB9',
+    background: '#45534C',
+    background_deactive : '#727F78',
+    card: '#1B1F1D',
+    text: '#D9CCB9',
+    border: '#D9CCB9',
+    notification: 'FFCC00',
+  }
+}
+
+const lightTheme: Theme = {
+  dark: false,
+  colors: {
+    primary: '#45534C',
+    background: '#F3F0EB',
+    background_deactive : '#9EAAA4',
+    card: '#D9CCB9',
+    text: '#45534C',
+    border: '#45534C',
+    notification: '#FF421A',
+  }
+}
+
 
 export default App;
