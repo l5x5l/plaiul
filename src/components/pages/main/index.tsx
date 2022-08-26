@@ -1,13 +1,27 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import textStyle from "../../../style/textStyle";
+import ContainerStyle from "../../../style/containerStyle";
+import { Logo } from "../../atoms/logo";
+import { CommunityScreen } from "./community";
+import { HomeScreen } from "./home";
+import { MyPageScreen } from "./mypage";
+import { TipScreen } from "./tip";
 
 const Main = () => {
+    const Tab = createBottomTabNavigator()
+
     return (
-        <SafeAreaView>
-            <View>
-                <Text style={textStyle.headline1}>Hello!</Text>
+        <SafeAreaView style={ContainerStyle.container}>
+            <View style={ContainerStyle.container}>
+                <Logo/>
+                <Tab.Navigator screenOptions={{headerShown:false}}>
+                    <Tab.Screen name="Home" component={HomeScreen}/>
+                    <Tab.Screen name="Community" component={CommunityScreen}/>
+                    <Tab.Screen name="Tip" component={TipScreen}/>
+                    <Tab.Screen name="MyPage" component={MyPageScreen}/>
+                </Tab.Navigator>
             </View>
         </SafeAreaView>
     )

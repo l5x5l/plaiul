@@ -21,6 +21,7 @@ import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
 import { Main } from './src/components/pages/main';
+import ContainerStyle from './src/style/containerStyle';
 import { Theme } from './src/type/theme';
 
 
