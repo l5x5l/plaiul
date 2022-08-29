@@ -1,8 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ContainerStyle from "../../../style/containerStyle";
 import { Logo } from "../../atoms/logo";
 import { CommunityScreen } from "./community";
 import { HomeScreen } from "./home";
@@ -13,8 +12,8 @@ const Main = () => {
     const Tab = createBottomTabNavigator()
 
     return (
-        <SafeAreaView style={ContainerStyle.container}>
-            <View style={ContainerStyle.container}>
+        <SafeAreaView style={{flex : 1}}>
+            <View style={{flex : 1}}>
                 <Logo/>
                 <Tab.Navigator screenOptions={{headerShown:false}}>
                     <Tab.Screen name="Home" component={HomeScreen}/>

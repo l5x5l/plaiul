@@ -1,10 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
-import ContainerStyle from "../../../../style/containerStyle";
 
 const CommunityScreen = () => {
     return (
-        <View style={ContainerStyle.container}>
+        <View style={{flex : 1}}>
             <Text>Community</Text>
         </View>
     )

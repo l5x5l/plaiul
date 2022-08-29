@@ -7,7 +7,14 @@ const ContainerStyle = StyleSheet.create({
     toolbar : {
         flexDirection : "row",
         height : 56
-    }
+    },
 })
 
-export default ContainerStyle
+const stroke2Container = function(color : string) {
+    return {
+        borderColor : color,
+        borderWidth : 2
+    }
+}
+
+export {stroke2Container, ContainerStyle}
