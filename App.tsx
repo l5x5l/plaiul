@@ -8,11 +8,10 @@
  * @format
  */
 
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import {  NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import {
-  StyleSheet,
   useColorScheme,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
