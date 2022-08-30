@@ -1,4 +1,5 @@
 export declare type UserDto = {
     userIdx : number,
-    nickname : string
+    nickname : string,
+    profile? : string,
 }
