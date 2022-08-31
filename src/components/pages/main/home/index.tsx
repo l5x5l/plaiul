@@ -2,7 +2,6 @@ import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import textStyle from "../../../../style/textStyle";
 import { PostPagerView } from "../../../blocks/postPagerView";
 import { TipPagerView } from "../../../blocks/tipPagerView";
 

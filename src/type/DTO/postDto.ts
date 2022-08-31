@@ -6,6 +6,7 @@ export declare type PostDto = {
     title : string,
     content : string,
     thumbnail : string,
+    tags? : string[],
     isLiked? : boolean,
     likeCnt? : number,
     commentCnt? : number,
