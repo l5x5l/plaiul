@@ -1,13 +1,19 @@
 import { useTheme } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import textStyle from "../../../../style/textStyle";
 import { PostDto } from "../../../../type/DTO/postDto";
+import { RootStackParamList } from "../../../../type/navigate/types";
 import { Line } from "../../../atoms/line";
 import { SelectButton } from "../../../atoms/selectButton";
 import { PostView } from "../../../blocks/postView";
 
-const CommunityScreen = () => {
+export declare type CommunityScreenProps = {
+    navigation : NativeStackNavigationProp<RootStackParamList, "Main", undefined>
+}
+
+const CommunityScreen = (props : CommunityScreenProps) => {
 
     const { colors } = useTheme()
     const [selectedCategory, setSelectedCategory] = useState<"story" | "qna">("story")
@@ -80,7 +86,7 @@ const CommunityScreen = () => {
     }
     
     function setData() {
-        pageIdx.current = pageIdx.current + 1
+        pageIdx.current = pageIdx.current + 6
         const response = getDatas(pageIdx.current)
         setPostList([...postList, ...response])
     }
@@ -113,7 +119,9 @@ const CommunityScreen = () => {
                 </Pressable>
             </View>
             <Line marginTop={8} />
-            <FlatList numColumns={2} data={postList} renderItem={({ item }) => <PostView post={item} />}
+            <FlatList keyExtractor={item => (item.storyIdx === undefined) ? `community_qna_${item.qnaIdx}`: `community_story_${item.storyIdx}`} numColumns={2} data={postList} renderItem={({ item }) => <PostView post={item} onClick={(idx : number) => {
+                props.navigation.push("Story", {storyIdx : idx})
+            }}/>}
                 onEndReachedThreshold={0.8}
                 onEndReached={() => { setData()}} />
         </View>

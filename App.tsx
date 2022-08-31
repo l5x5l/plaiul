@@ -15,11 +15,9 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
 import { Main } from './src/components/pages/main';
+import { StoryScreen } from './src/components/pages/story';
+import { RootStackParamList } from './src/type/navigate/types';
 import { Theme } from './src/type/theme';
 
 
@@ -27,17 +25,14 @@ const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
 
-  const Stack = createNativeStackNavigator()
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const Stack = createNativeStackNavigator<RootStackParamList>()
 
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name='MAIN' component={Main} />
+          <Stack.Screen name='Main' component={Main} />
+          <Stack.Screen name="Story" component={StoryScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

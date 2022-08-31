@@ -15,7 +15,10 @@ const PostView = (props: PostViewProps) => {
     return (
         useMemo(() =>
             <Pressable style={{ flex: 1, marginHorizontal : 2, marginTop : 16, borderColor : colors.border, borderWidth : 2 }} onPress={() => {
-
+                const postIdx = (props.post.storyIdx === undefined) ? props.post.qnaIdx : props.post.storyIdx
+                if (props.onClick !== undefined) {
+                    props.onClick!!(postIdx!!)
+                }
             }}>
                 <View style={PostViewStyle.container}>
                     <Image source={{ uri: props.post.thumbnail }} style={PostViewStyle.thumbNail} />
