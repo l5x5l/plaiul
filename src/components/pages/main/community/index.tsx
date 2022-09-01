@@ -119,7 +119,7 @@ const CommunityScreen = (props : CommunityScreenProps) => {
                 </Pressable>
             </View>
             <Line marginTop={8} />
-            <FlatList keyExtractor={item => (item.storyIdx === undefined) ? `community_qna_${item.qnaIdx}`: `community_story_${item.storyIdx}`} numColumns={2} data={postList} renderItem={({ item }) => <PostView post={item} onClick={(idx : number) => {
+            <FlatList keyExtractor={item => (item.storyIdx === undefined) ? `qna_${item.qnaIdx}`: `story_${item.storyIdx}`} numColumns={2} data={postList} renderItem={({ item }) => <PostView post={item} onClick={(idx : number) => {
                 props.navigation.push("Story", {storyIdx : idx})
             }}/>}
                 onEndReachedThreshold={0.8}

@@ -11,14 +11,16 @@ export declare type TipViewProps = {
 }
 
 
+const onClick = () => {
+    
+}
+
 const TipView = (props: TipViewProps) => {
     const { colors } = useTheme()
 
     return (
         useMemo(() =>
-            <Pressable style={{ flex: 1, marginHorizontal: 16, marginBottom: 8, borderColor: colors.border, borderWidth: 2 }} onPress={() => {
-
-            }}>
+            <Pressable style={{ flex: 1, marginHorizontal: 16, marginBottom: 8, borderColor: colors.border, borderWidth: 2 }} onPress={onClick}>
                 <View style={PostViewStyle.container}>
                     <Image source={{ uri: props.tip.thumbnail }} style={PostViewStyle.thumbNail} />
                     <View style={PostViewStyle.textArea}>
