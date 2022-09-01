@@ -1,12 +1,13 @@
 export declare type Theme = {
     dark: boolean,
-    colors: {
-        primary: string,
-        background: string,
-        background_deactive: string,
-        card: string,
-        text: string,
-        border: string,
-        notification: string,
-    }
+    colors: color
+}
+
+export declare type color = {
+    primary: string,
+    background: string,
+    card: string,
+    text: string,
+    border: string,
+    notification: string,
 }

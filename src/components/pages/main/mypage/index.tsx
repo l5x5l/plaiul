@@ -1,13 +1,20 @@
 import { useTheme } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import textStyle from "../../../../style/textStyle";
 import { UserDto } from "../../../../type/DTO/userDto";
+import { RootStackParamList } from "../../../../type/navigate/types";
 import { Line } from "../../../atoms/line";
 import { TextButton } from "../../../atoms/textButton";
 
-const MyPageScreen = () => {
+export declare type MyPageScreenProps = {
+    navigation : NativeStackNavigationProp<RootStackParamList, "Main", undefined>
+}
+
+
+const MyPageScreen = (props : MyPageScreenProps) => {
 
     const { colors } = useTheme();
     const [userInfo, setUserInfo] = useState<UserDto>({ nickname: "probe", userIdx: -1 })
@@ -21,7 +28,7 @@ const MyPageScreen = () => {
             <Line marginTop={24} />
             <Text style={[textStyle.headline3, { color: colors.text, marginTop: 24, marginBottom: 16 }]}>내 활동</Text>
             <TextButton text={"좋아요 한 게시글"} onPress={function (): void {
-
+                props.navigation.push("LoginHome")
             }} />
             <TextButton text={"좋아요 한 Grower's tip"} onPress={function (): void {
 

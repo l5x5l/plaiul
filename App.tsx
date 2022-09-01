@@ -15,6 +15,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
 import { StoryScreen } from './src/components/pages/story';
 import { RootStackParamList } from './src/type/navigate/types';
@@ -33,18 +34,19 @@ const App = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name='Main' component={Main} />
           <Stack.Screen name="Story" component={StoryScreen}/>
+          <Stack.Screen name="LoginHome" component={LoginHome}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
 };
 
+//background_deactive : '#727F78',
 const darkTheme: Theme = {
   dark: true,
   colors: {
     primary: '#D9CCB9',
     background: '#45534C',
-    background_deactive : '#727F78',
     card: '#1B1F1D',
     text: '#D9CCB9',
     border: '#D9CCB9',
@@ -52,12 +54,12 @@ const darkTheme: Theme = {
   }
 }
 
+// background_deactive : '#9EAAA4',
 const lightTheme: Theme = {
   dark: false,
   colors: {
     primary: '#45534C',
     background: '#F3F0EB',
-    background_deactive : '#9EAAA4',
     card: '#D9CCB9',
     text: '#45534C',
     border: '#45534C',
