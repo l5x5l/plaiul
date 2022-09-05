@@ -10,7 +10,9 @@ export declare type styledButtonProps = {
     marginTop? : number,
     marginBottom? : number,
     width? : number | string,
-    height? : number | string
+    height? : number | string,
+    paddingHorizon ? : number,
+    paddingVertical ?: number
 }
 
 const StyledButton = (props : styledButtonProps) => {
@@ -28,7 +30,7 @@ const StyledButton = (props : styledButtonProps) => {
 
     return (
         <Pressable onPress={props.onClick}>
-            <Text style={[customStyle, textStyle.title1, {width : props.width, height : props.height, marginBottom : props.marginBottom, marginTop : props.marginTop, paddingVertical : 12, textAlign : "center"}]}>{props.text}</Text>
+            <Text style={[customStyle, textStyle.title1, {width : props.width, height : props.height, marginBottom : props.marginBottom, marginTop : props.marginTop, paddingVertical : props.paddingVertical ? props.paddingVertical : 12, textAlignVertical : "center", textAlign : "center", paddingHorizontal : props.paddingHorizon}]}>{props.text}</Text>
         </Pressable>
     )
 }
