@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import textStyle from "../../../../style/textStyle";
@@ -14,26 +14,26 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const { colors } = useTheme()
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 1, padding: 24 }}>
+        <SafeAreaView style={LoginScreenStyle.safeAreaView}>
+            <View style={LoginScreenStyle.mainContainer}>
                 <Logo />
-                <View style={{ paddingHorizontal: 16}}>
+                <View style={{ paddingHorizontal: 16 }}>
                     <Text style={[textStyle.headline1, { color: colors.text, marginTop: 96 }]}>Login</Text>
-                    <View style={{ flexDirection: "row", width: "100%",  marginTop: 40, alignItems : "center" }}>
-                        <Image source={require("../../../../assets/images/profile_20.png")} style={{width : 20, height : 20}}/>
-                        <TextInput style={[textStyle.body1, { color: colors.text, flex: 1 }]} />
+                    <View style={{ flexDirection: "row", width: "100%", marginTop: 40, alignItems: "center", height : 48}}>
+                        <Image source={require("../../../../assets/images/profile_20.png")} style={{ width: 20, height: 20, tintColor: colors.border,  paddingVertical : 8 }} />
+                        <TextInput style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8 }]} />
                     </View>
                     <Line />
-                    <View style={{ flexDirection: "row", width: "100%",  marginTop: 8, alignItems : "center" }}>
-                    <Image source={require("../../../../assets/images/lock_20.png")} style={{ height : 20, width : 20}} resizeMode="contain"/>
-                        <TextInput onChangeText={() => { }} style={[textStyle.body1, { color: colors.text, flex : 1 }]} />
+                    <View style={{ flexDirection: "row", width: "100%", marginTop: 8, alignItems : "center",  height : 48}}>
+                        <Image source={require("../../../../assets/images/lock_20.png")} style={{ height: 20, width: 20, tintColor: colors.border, paddingVertical : 8  }} resizeMode="contain" />
+                        <TextInput onChangeText={() => { }} style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8}]} />
                     </View>
                     <Line />
                     <StyledButton onClick={() => {
 
                     }} style={"background"} text={"로그인"} marginTop={24} />
                 </View>
-                <View style={{ flexDirection: "row", justifyContent: "center", marginTop : 68 }}>
+                <View style={{ flexDirection: "row", justifyContent: "center", position: "absolute", bottom: 48, start: 0, end: 0 }}>
                     <Pressable onPress={() => { navigation.push("SignUp") }}>
                         <Text style={[textStyle.title2, { color: colors.text, paddingHorizontal: 24, paddingVertical: 8 }]}>회원가입</Text>
                     </Pressable>
@@ -49,5 +49,14 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
         </SafeAreaView>
     )
 }
+
+const LoginScreenStyle = StyleSheet.create({
+    safeAreaView: {
+        height: Dimensions.get("window").height
+    },
+    mainContainer: {
+        flex: 1, padding: 24
+    }
+})
 
 export { LoginScreen }

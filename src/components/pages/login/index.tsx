@@ -3,6 +3,10 @@ import React from "react";
 import { LoginParamList } from "../../../type/navigate/types";
 import { LoginScreen } from "./login";
 import { SignUpScreen } from "./signup";
+import { SignUpAuthScreen } from "./signup_auth";
+import { SignUpEmailScreen } from "./signup_email";
+import { SignUpNicknameScreen } from "./signup_nickname";
+import { SignUpTermScreen } from "./signup_term";
 
 const LoginHome = () => {
 
@@ -12,6 +16,10 @@ const LoginHome = () => {
         <Stack.Navigator screenOptions={{headerShown : false}}>
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="SignUp" component={SignUpScreen}/>
+            <Stack.Screen name="Email" component={SignUpEmailScreen}/>
+            <Stack.Screen name="Auth" component={SignUpAuthScreen}/>
+            <Stack.Screen name="Nickname" component={SignUpNicknameScreen}/>
+            <Stack.Screen name="Term" component={SignUpTermScreen}/>
         </Stack.Navigator>
     )
 }

@@ -18,7 +18,7 @@ const SignUpScreen = ({ navigation }: SignUpScreenProps) => {
                 <View style={{ paddingHorizontal: 16 }}>
                     <Text style={[textStyle.headline1, { color: colors.text, marginTop: 96 }]}>회원가입</Text>
                     <StyledButton onClick={() =>
-                        navigation.goBack()
+                        navigation.push("Term")
                     } style={"stroke"} text={"이메일로 회원가입"} width={"100%"} marginTop={96} />
                 </View>
                 <Pressable style={{position : "absolute", top: 16, right: 16, padding : 8 }} onPress={() => {navigation.goBack()}}>

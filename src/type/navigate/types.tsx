@@ -16,11 +16,19 @@ type LoginHomeScreenProps = NativeStackScreenProps<RootStackParamList, "LoginHom
 
 type LoginParamList = {
     Login : undefined,
-    SignUp : undefined
+    SignUp : undefined,
+    Email : undefined,
+    Auth : undefined,
+    Nickname : undefined,
+    Term : undefined
 }
 
 type LoginScreenProps = NativeStackScreenProps<LoginParamList, "Login">
 type SignUpScreenProps = NativeStackScreenProps<LoginParamList, "SignUp">
+type SignUpEmailScreenProps = NativeStackScreenProps<LoginParamList, "Email">
+type SignUpAuthScreenProps = NativeStackScreenProps<LoginParamList, "Auth">
+type SignUpNicknameScreenProps = NativeStackScreenProps<LoginParamList, "Nickname">
+type SignUpTermScreenProps = NativeStackScreenProps<LoginParamList, "Term">
 
 export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps,
-    LoginParamList, LoginScreenProps, SignUpScreenProps}
+    LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps}
