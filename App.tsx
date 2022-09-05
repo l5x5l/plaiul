@@ -50,7 +50,7 @@ const darkTheme: Theme = {
     card: '#1B1F1D',
     text: '#D9CCB9',
     border: '#D9CCB9',
-    notification: 'FFCC00',
+    notification: '#FFCC00',
   }
 }
 
