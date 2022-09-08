@@ -51,7 +51,7 @@ const SignUpTermScreen = ({ navigation }: SignUpTermScreenProps) => {
                 <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
                     <StyledButton onClick={
                         () => { navigation.push("Email") }
-                    } style={"background"} text={"다음으로"} height={56} />
+                    } style={"background"} text={"다음으로"} height={56} enable={allChecked}/>
                 </View>
             </View>
         </SafeAreaView>

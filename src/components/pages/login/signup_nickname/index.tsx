@@ -31,7 +31,7 @@ const SignUpNicknameScreen = ({ navigation }: SignUpNicknameScreenProps) => {
                 <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
                     <StyledButton onClick={
                         () => { navigation.popToTop() }
-                    } style={"background"} text={"회원가입"} height={56} />
+                    } style={"background"} text={"회원가입"} height={56} enable={!nicknameError}/>
                 </View>
             </View>
         </SafeAreaView>
