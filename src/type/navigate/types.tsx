@@ -1,4 +1,4 @@
-import { NavigationContainerProps } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type RootStackParamList = {
@@ -30,5 +30,17 @@ type SignUpAuthScreenProps = NativeStackScreenProps<LoginParamList, "Auth">
 type SignUpNicknameScreenProps = NativeStackScreenProps<LoginParamList, "Nickname">
 type SignUpTermScreenProps = NativeStackScreenProps<LoginParamList, "Term">
 
+
+
+type MainTabParamList = {
+    Home : undefined,
+    Community : undefined,
+    Tip : undefined,
+    MyPage : undefined
+}
+
+type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
+
 export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps,
-    LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps}
+    LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps,
+    MainTabParamList, CommunityTabScreenProps}

@@ -3,7 +3,7 @@ import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { mainScreenProps } from "../../../type/navigate/types";
+import { mainScreenProps, MainTabParamList } from "../../../type/navigate/types";
 import { Logo } from "../../atoms/logo";
 import { CommunityScreen } from "./community";
 import { HomeScreen } from "./home";
@@ -11,7 +11,7 @@ import { MyPageScreen } from "./mypage";
 import { TipScreen } from "./tip";
 
 const Main = ({navigation} : mainScreenProps) => {
-    const Tab = createBottomTabNavigator()
+    const Tab = createBottomTabNavigator<MainTabParamList>()
     const {colors} = useTheme()
 
     return (
