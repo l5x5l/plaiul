@@ -7,7 +7,7 @@ import { PostDto } from "../../../../type/DTO/postDto";
 import { RootStackParamList } from "../../../../type/navigate/types";
 import { Line } from "../../../atoms/line";
 import { SelectButton } from "../../../atoms/selectButton";
-import { PostView } from "../../../blocks/postView";
+import  PostView  from "../../../blocks/postView";
 
 export declare type CommunityScreenProps = {
     navigation : NativeStackNavigationProp<RootStackParamList, "Main", undefined>

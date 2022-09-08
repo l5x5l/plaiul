@@ -52,4 +52,4 @@ const PostViewStyle = StyleSheet.create({
     }
 })
 
-export { TipView }
+export default React.memo(TipView)

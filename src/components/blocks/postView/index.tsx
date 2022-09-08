@@ -49,4 +49,4 @@ const PostViewStyle = StyleSheet.create({
     }
 })
 
-export { PostView }
+export default React.memo(PostView)

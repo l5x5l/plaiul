@@ -4,7 +4,7 @@ import { FlatList, Text, View } from "react-native";
 import textStyle from "../../../../style/textStyle";
 import { TipDto } from "../../../../type/DTO/tipDto";
 import { TipPagerView } from "../../../blocks/tipPagerView";
-import { TipView } from "../../../blocks/tipView";
+import  TipView  from "../../../blocks/tipView";
 
 const TipScreen = () => {
 
