@@ -20,7 +20,7 @@ const CheckBox = (props: CheckBoxProps) => {
                 props.style==="fill" ?
                      require("../../../assets/images/checkbox_fill_40.png")
                     : require("../../../assets/images/checkbox_stroke_40.png")} 
-                    style={{ height: 40, width: 40, tintColor : props.isChecked ? colors.border : colors.card }} />
+                    style={{ height: 30, width: 30, tintColor : props.isChecked ? colors.border : colors.card }} />
         </Pressable>
     )
 
