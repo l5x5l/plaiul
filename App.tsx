@@ -8,16 +8,18 @@
  * @format
  */
 
-import {  NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   useColorScheme,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
 import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
 import { StoryScreen } from './src/components/pages/story';
+import { store } from './src/redux/store';
 import { RootStackParamList } from './src/type/navigate/types';
 import { Theme } from './src/type/theme';
 
@@ -29,15 +31,17 @@ const App = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>()
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name='Main' component={Main} />
-          <Stack.Screen name="Story" component={StoryScreen}/>
-          <Stack.Screen name="LoginHome" component={LoginHome}/>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='Main' component={Main} />
+            <Stack.Screen name="Story" component={StoryScreen} />
+            <Stack.Screen name="LoginHome" component={LoginHome} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 };
 
