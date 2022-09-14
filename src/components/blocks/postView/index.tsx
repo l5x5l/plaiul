@@ -21,8 +21,8 @@ const PostView = (props: PostViewProps) => {
 
     return (
         useMemo(() =>
-            <Pressable style={{ flex: 1, marginHorizontal: 2, marginTop: 16, borderColor: colors.border, borderWidth: 2 }} onPress={clickItem}>
-                <View style={PostViewStyle.container}>
+            <Pressable style={{ flex: 0.5 }} onPress={clickItem}>
+                <View style={[PostViewStyle.container,{marginHorizontal: 2, marginTop: 16, borderColor: colors.border, borderWidth: 2}]}>
                     <Image source={{ uri: props.post.thumbnail }} style={PostViewStyle.thumbNail} />
                     <View style={PostViewStyle.textArea}>
                         <Text style={[textStyle.title2, { color: colors.text }]} numberOfLines={1}>{props.post.title}</Text>
@@ -37,7 +37,7 @@ const PostView = (props: PostViewProps) => {
 
 const PostViewStyle = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     thumbNail: {
         width: "100%",

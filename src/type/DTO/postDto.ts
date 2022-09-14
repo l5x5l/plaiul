@@ -4,7 +4,7 @@ export declare type PostDto = {
     qnaIdx? : number,
     storyIdx? : number,
     title : string,
-    content : string,
+    content? : string,
     thumbnail : string,
     tags? : string[],
     isLiked? : boolean,
