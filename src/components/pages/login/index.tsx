@@ -6,6 +6,7 @@ import { SignUpScreen } from "./signup";
 import { SignUpAuthScreen } from "./signup_auth";
 import { SignUpEmailScreen } from "./signup_email";
 import { SignUpNicknameScreen } from "./signup_nickname";
+import { SignUpPasswordScreen } from "./signup_password";
 import { SignUpTermScreen } from "./signup_term";
 
 const LoginHome = () => {
@@ -18,6 +19,7 @@ const LoginHome = () => {
             <Stack.Screen name="SignUp" component={SignUpScreen}/>
             <Stack.Screen name="Email" component={SignUpEmailScreen}/>
             <Stack.Screen name="Auth" component={SignUpAuthScreen}/>
+            <Stack.Screen name="Password" component={SignUpPasswordScreen}/>
             <Stack.Screen name="Nickname" component={SignUpNicknameScreen}/>
             <Stack.Screen name="Term" component={SignUpTermScreen}/>
         </Stack.Navigator>

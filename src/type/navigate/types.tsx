@@ -6,12 +6,16 @@ type RootStackParamList = {
     Story : {
         storyIdx : number
     },
-    LoginHome : undefined
+    LoginHome : undefined,
+    Tip : {
+        tipIdx : number
+    }
 }
 
 type mainScreenProps = NativeStackScreenProps<RootStackParamList, "Main">
 type storyScreenProps = NativeStackScreenProps<RootStackParamList, "Story">
 type LoginHomeScreenProps = NativeStackScreenProps<RootStackParamList, "LoginHome">
+type TipDeatilScreenProps = NativeStackScreenProps<RootStackParamList, "Tip">
 
 
 type LoginParamList = {
@@ -20,7 +24,8 @@ type LoginParamList = {
     Email : undefined,
     Auth : undefined,
     Nickname : undefined,
-    Term : undefined
+    Term : undefined,
+    Password : undefined
 }
 
 type LoginScreenProps = NativeStackScreenProps<LoginParamList, "Login">
@@ -29,7 +34,7 @@ type SignUpEmailScreenProps = NativeStackScreenProps<LoginParamList, "Email">
 type SignUpAuthScreenProps = NativeStackScreenProps<LoginParamList, "Auth">
 type SignUpNicknameScreenProps = NativeStackScreenProps<LoginParamList, "Nickname">
 type SignUpTermScreenProps = NativeStackScreenProps<LoginParamList, "Term">
-
+type SignUpPasswordScreenProps = NativeStackScreenProps<LoginParamList, "Password">
 
 
 type MainTabParamList = {
@@ -41,6 +46,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps,
-    LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps,
+    LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}
