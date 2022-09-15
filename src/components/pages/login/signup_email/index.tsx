@@ -1,9 +1,12 @@
 import { useTheme } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { authNumberResult, postAuthNumber } from "../../../../api/login";
 import { useTextInput } from "../../../../hooks/useInput";
+import signUpSlice from "../../../../redux/login/signup";
+import { store } from "../../../../redux/store";
 import textStyle from "../../../../style/textStyle";
 import { SignUpEmailScreenProps } from "../../../../type/navigate/types";
 import { BackButton } from "../../../atoms/backButton";
@@ -13,6 +16,22 @@ import { Line } from "../../../atoms/line";
 const SignUpEmailScreen = ({ navigation }: SignUpEmailScreenProps) => {
     const { colors } = useTheme()
     const {text : emailText, onChangeInputText : emailInputEvent, isError : emailError} = useTextInput({regex : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ })
+    const [sendAuthCodeResult, setSendAuthCodeResult] = useState<authNumberResult>()
+    const action = signUpSlice.actions
+
+    const [pending, setPending] = useState(false)
+
+    useEffect(() => {
+        if (sendAuthCodeResult !== undefined) {
+            if (sendAuthCodeResult.sent) {
+                store.dispatch(action.setEmail(emailText))
+                navigation.push("Auth")
+            } else {
+                // error
+            }
+        }
+        setPending(false)
+    }, [sendAuthCodeResult])
 
     return (
         <SafeAreaView style={SignUpEmailStyle.safeAreaView}>
@@ -28,8 +47,12 @@ const SignUpEmailScreen = ({ navigation }: SignUpEmailScreenProps) => {
                 </View>
                 <View style={{position : "absolute", bottom : 0, width : "100%"}}>
                     <StyledButton onClick={
-                        () => { navigation.push("Auth") }
-                    } style={"background"} text={"인증번호 발송"} height={56} enable={!emailError}/>
+                        async () => { 
+                            setPending(true)
+                            const result = await postAuthNumber(emailText)
+                            setSendAuthCodeResult(result.data)
+                        }
+                    } style={"background"} text={"인증번호 발송"} height={56} enable={!emailError && !pending}/>
                 </View>
             </View>
         </SafeAreaView>

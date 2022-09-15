@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
+import signUpSlice from "./login/signup";
 import postListSlice from "./story/postListSlice";
 import storySlice from "./story/storySlice";
 
 export const store = configureStore({
     reducer : {
         story : storySlice.reducer,
-        storyList : postListSlice.reducer
+        storyList : postListSlice.reducer,
+        signup : signUpSlice.reducer
     }
 })
 
