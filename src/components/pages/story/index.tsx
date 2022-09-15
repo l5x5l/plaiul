@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { storyScreenProps } from "../../../type/navigate/types";
 import { BackButton } from "../../atoms/backButton";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -52,6 +52,21 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
             </ScrollView>
             <View>
                 <Line />
+                <View style={StoryScreenStyle.bottomArea}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}}>
+                            <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} resizeMode="center"/>
+                            <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.commentCnt}</Text>
+                        </Pressable>
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}}>
+                            <Image source={ (story.value.isLiked) ? require("../../../assets/images/heart_fill_28.png") : require("../../../assets/images/heart_stroke_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} />
+                            <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.likeCnt}</Text>
+                        </Pressable>
+                    </View>
+                    <Pressable style={{padding : 14}}>
+                        <Image source={require("../../../assets/images/share_28.png")} style={{ height: 28, width: 28}} />
+                    </Pressable>
+                </View>
             </View>
         </SafeAreaView>
 
@@ -69,6 +84,10 @@ const StoryScreenStyle = StyleSheet.create({
         width: 40,
         borderRadius: 20
     },
+    bottomArea: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    }
 })
 
 export { StoryScreen }
