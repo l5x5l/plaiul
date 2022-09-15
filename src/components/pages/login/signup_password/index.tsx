@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Dimensions, Platform, StatusBar, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTextInput } from "../../../../hooks/useInput";
 import signUpSlice from "../../../../redux/login/signup";
@@ -41,7 +41,7 @@ const SignUpPasswordScreen = ({navigation} : SignUpPasswordScreenProps) => {
 
 const SignUpPasswordStyle = StyleSheet.create({
     safeAreaView: {
-        flex: 1
+        height: Platform.OS === "android" ? Dimensions.get("window").height - StatusBar.currentHeight!! : Dimensions.get("window").height
     },
     mainContainer: {
         flex: 1

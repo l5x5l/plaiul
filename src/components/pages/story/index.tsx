@@ -11,8 +11,6 @@ import { TagButton } from "../../atoms/tag";
 import { useDispatch, useSelector } from "react-redux";
 import { rootDispatch, rootState } from "../../../redux/store";
 import storySlice, { loadStory, storySliceState } from "../../../redux/story/storySlice";
-import axios from "axios";
-import { getStory } from "../../../api";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -44,7 +42,6 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                         <Text style={[textStyle.body2, { marginTop: 24, color: colors.text }]}>{story.value.content}</Text>
                         <View style={{ flexDirection: "row", width: "100%", marginTop: 24, marginBottom: 24 }}>
                             {
-
                                 story.value.tags.map((tag) => {
                                     return (<TagButton key={`tag_${tag}`} text={tag} onPress={() => { }} marginEnd={8} />)
                                 })
