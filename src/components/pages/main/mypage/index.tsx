@@ -6,15 +6,16 @@ import { ScrollView } from "react-native-gesture-handler";
 import textStyle from "../../../../style/textStyle";
 import { UserDto } from "../../../../type/DTO/userDto";
 import { RootStackParamList } from "../../../../type/navigate/types";
+import { removeAccessToken, removeRefreshToken } from "../../../../util/token";
 import { Line } from "../../../atoms/line";
 import { TextButton } from "../../../atoms/textButton";
 
 export declare type MyPageScreenProps = {
-    navigation : NativeStackNavigationProp<RootStackParamList, "Main", undefined>
+    navigation: NativeStackNavigationProp<RootStackParamList, "Main", undefined>
 }
 
 
-const MyPageScreen = (props : MyPageScreenProps) => {
+const MyPageScreen = (props: MyPageScreenProps) => {
 
     const { colors } = useTheme();
     const [userInfo, setUserInfo] = useState<UserDto>({ nickname: "probe", userIdx: -1 })
@@ -55,6 +56,10 @@ const MyPageScreen = (props : MyPageScreenProps) => {
             }} />
             <TextButton text={"고객센터"} onPress={function (): void {
 
+            }} />
+            <TextButton text={"로그아웃"} onPress={async () => {
+                await removeAccessToken()
+                await removeRefreshToken()
             }} />
             <Line marginTop={16} />
             <View style={{ height: 56 }} />

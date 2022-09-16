@@ -7,6 +7,7 @@ import { apiBaseResponse } from "../../../../api";
 import { loginResult, postLogin } from "../../../../api/login";
 import textStyle from "../../../../style/textStyle";
 import { LoginScreenProps } from "../../../../type/navigate/types";
+import { setAccessToken, setRefreshToken } from "../../../../util/token";
 import { StyledButton } from "../../../atoms/button";
 import { Line } from "../../../atoms/line";
 import { Logo } from "../../../atoms/logo";
@@ -19,10 +20,16 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const [loginResult, setLoginResult] = useState<apiBaseResponse<loginResult, undefined>>()
 
     useEffect(() => {
+        const saveTokens = async (refreshToken : string, accessToken : string) => {
+            await setRefreshToken(refreshToken)
+            await setAccessToken(accessToken)
+            navigation.goBack()
+        }
+
         console.log(JSON.stringify(loginResult))
         if (loginResult !== undefined) {
             if (loginResult.data !== undefined) {
-                // 토큰 저장
+                saveTokens(loginResult.data.refreshToken, loginResult.data.accessToken)
             } else {
                 //console.log(JSON.stringify(loginResult))
             }
