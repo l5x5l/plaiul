@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toApiBaseResponse, toApiErrorResponse } from ".";
+import { getAccessToken, getRefreshToken } from "../util/token";
 
 const baseUri = "http://15.164.214.109"
 
@@ -60,6 +61,14 @@ export type refreshTokenResult = {
     refreshToken: string
 }
 
-export const postRefreshToken = () => axios.post(`${baseUri}/api/auth/refresh`).then(
-    response => toApiBaseResponse<refreshTokenResult, undefined>(response)
-).catch((error) => toApiErrorResponse<refreshTokenResult, undefined>(error))
+export const postRefreshToken = async () => {
+    try {
+        const accessToken = await getAccessToken()
+        const refreshToken = await getRefreshToken()
+        const response = await axios.post(`${baseUri}/api/auth/refresh`, {}, { headers :  { authorization: `Bearer ${accessToken}`, refreshtoken : `Bearer ${refreshToken}` }})
+        return toApiBaseResponse<refreshTokenResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<refreshTokenResult, undefined>(error)
+    }
+}
+

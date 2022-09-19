@@ -19,8 +19,8 @@ async function callNeedLoginApi<T>(apiCall: () => Promise<apiBaseResponse<T, any
                 if (repeat) {
                     throw Error("need login api call twice! need fix")
                 }
-                await setRefreshToken(refreshTokenResult.data.refreshToken)
-                await setAccessToken(refreshTokenResult.data.accessToken)
+                await setRefreshToken(refreshTokenResult.data!!.refreshToken)
+                await setAccessToken(refreshTokenResult.data!!.accessToken)
                 // 무한 반복 가능성?
                 await callNeedLoginApi<T>(apiCall, true)
             } else {
