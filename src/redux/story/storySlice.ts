@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { DefaultStoryDto, StoryDto } from "../../type/DTO/storyDto";
-import { getStory } from "../../api";
+import { getStory, patchToggleLike, patchToggleLikeResult } from "../../api/stories";
+import callNeedLoginApi from "../../util/callNeedLogin";
 
 export interface storySliceState {
     isError: boolean,
@@ -10,6 +11,10 @@ export interface storySliceState {
 
 export const loadStory = createAsyncThunk("story/loadByIdx", async (storyIdx: number) => {
     return await getStory(storyIdx)
+})
+
+export const toggleLike = createAsyncThunk("story/like", async (storyIdx : number) => {
+    return await callNeedLoginApi<patchToggleLikeResult>(() => patchToggleLike(storyIdx))
 })
 
 const initialState: storySliceState = {
@@ -26,8 +31,6 @@ const storySlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(loadStory.pending, (state, action) => {
-            // console.log(`${JSON.stringify(action)}`)
-            // console.log("pending...")
             state.isLoading = true
             state.isError = false
         }), builder.addCase(loadStory.fulfilled, (state, action) => {
@@ -42,7 +45,21 @@ const storySlice = createSlice({
                 state.isLoading = false
             }
         }), builder.addCase(loadStory.rejected, (state, action) => {
-            console.log(`${JSON.stringify(action)}`)
+            //console.log(`${JSON.stringify(action)}`)
+        }), builder.addCase(toggleLike.pending, (state, action) => {
+
+        }), builder.addCase(toggleLike.fulfilled, (state, action) => {
+            const isLiked = action.payload?.data?.isLiked
+            if (isLiked !== undefined) {
+                if (isLiked) {
+                    state.value.likeCnt += 1
+                } else {
+                    state.value.likeCnt -= 1
+                }
+                state.value.isLiked = isLiked
+            }
+        }), builder.addCase(toggleLike.rejected, (state, action) => {
+            //console.log(`${JSON.stringify(action)}`)
         })
     }
 })

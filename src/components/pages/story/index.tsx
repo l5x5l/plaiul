@@ -10,7 +10,7 @@ import { Line } from "../../atoms/line";
 import { TagButton } from "../../atoms/tag";
 import { useDispatch, useSelector } from "react-redux";
 import { rootDispatch, rootState } from "../../../redux/store";
-import storySlice, { loadStory, storySliceState } from "../../../redux/story/storySlice";
+import storySlice, { loadStory, storySliceState, toggleLike } from "../../../redux/story/storySlice";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -58,7 +58,9 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                             <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} resizeMode="center"/>
                             <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.commentCnt}</Text>
                         </Pressable>
-                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}}>
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}} onPress={() => {
+                            dispatch(toggleLike(route.params.storyIdx))
+                        }}>
                             <Image source={ (story.value.isLiked) ? require("../../../assets/images/heart_fill_28.png") : require("../../../assets/images/heart_stroke_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} />
                             <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.likeCnt}</Text>
                         </Pressable>
