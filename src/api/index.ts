@@ -13,7 +13,8 @@ export type apiBaseResponse<T, G> = {
 
 export function toApiBaseResponse<T, G>(response: AxiosResponse<any, any>) {
     return {
-        data: response.data.data
+        data: response.data.data,
+        meta : response.data.meta
     } as apiBaseResponse<T, G>
 }
 
