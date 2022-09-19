@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getStoryList } from "../../api";
+import { getStoryList } from "../../api/stories";
 import { PostDto } from "../../type/DTO/postDto";
 
 export interface postListSliceState {
@@ -53,10 +53,8 @@ const postListSlice = createSlice({
             state.isError = false
         }),
         builder.addCase(loadStoryList.fulfilled, (state, action) => {
-            console.log(`received data ${JSON.stringify(action.payload)}`)
             if (action.payload?.data !== undefined) {
                 state.data = [...state.data, ...action.payload.data]
-                console.log(`received data ${JSON.stringify(state.data)}`)
                 if (action.payload?.meta?.nextCursor !== null) {
                     state.cursor = action.payload!!.meta!!.nextCursor
                 } else {
