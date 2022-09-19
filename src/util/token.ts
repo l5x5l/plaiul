@@ -3,12 +3,12 @@ import { accessTokenKey, refreshTokenKey } from "./callNeedLogin"
 
 const getRefreshToken = async () => {
     const refreshToken = await AsyncStorage.getItem(refreshTokenKey)
-    return refreshToken != null ? JSON.parse(refreshToken) : null;
+    return refreshToken != null ? refreshToken : null; // JSON.parse(refreshToken) 을 할 필요 X (string)
 }
 
 const getAccessToken = async () => {
     const accessToken = await AsyncStorage.getItem(accessTokenKey)
-    return accessToken != null ? JSON.parse(accessToken) : null;
+    return accessToken != null ? accessToken : null;
 }
 
 const setRefreshToken = async (token: string) => {
