@@ -6,6 +6,9 @@ type RootStackParamList = {
     Story : {
         storyIdx : number
     },
+    StoryComment : {
+        storyIdx : number
+    },
     LoginHome : undefined,
     Tip : {
         tipIdx : number
@@ -16,6 +19,7 @@ type mainScreenProps = NativeStackScreenProps<RootStackParamList, "Main">
 type storyScreenProps = NativeStackScreenProps<RootStackParamList, "Story">
 type LoginHomeScreenProps = NativeStackScreenProps<RootStackParamList, "LoginHome">
 type TipDeatilScreenProps = NativeStackScreenProps<RootStackParamList, "Tip">
+type storyCommentScreenProps = NativeStackScreenProps<RootStackParamList, "StoryComment">
 
 
 type LoginParamList = {
@@ -46,6 +50,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps,
     LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}

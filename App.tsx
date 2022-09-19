@@ -20,6 +20,7 @@ import { LoginModal } from './src/components/blocks/loginModal';
 import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
 import { StoryScreen } from './src/components/pages/story';
+import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { store } from './src/redux/store';
 import { RootStackParamList } from './src/type/navigate/types';
 import { Theme } from './src/type/theme';
@@ -39,6 +40,7 @@ const App = () => {
                 <Stack.Screen name='Main' component={Main} />
                 <Stack.Screen name="Story" component={StoryScreen} />
                 <Stack.Screen name="LoginHome" component={LoginHome} />
+                <Stack.Screen name="StoryComment" component={StoryCommentScreen} />
               </Stack.Navigator>
             ), [])
           }

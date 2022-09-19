@@ -31,7 +31,7 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                     <BackButton margin={4} onPress={() => {
                         navigation.goBack()
                     }} />
-                    <Image style={{ width: "100%", aspectRatio: 1, backgroundColor: colors.card }} source={{ uri: (story.value.images && story.value.images.length >= 1) ? story.value.images[0] : "" }} />
+                    <Image style={{ width: "100%", aspectRatio: 1, backgroundColor: colors.card }} source={{ uri: (story.value.images && story.value.images.length >= 1) ? story.value.images[0] : undefined }} />
                     <View style={{ padding: 16 }}>
                         <Text style={[textStyle.headline1, { color: colors.text }]}>{(!story.isError) ? (story.value.title) : "에러입니다."}</Text>
                         <View style={StoryScreenStyle.profileArea}>
@@ -54,7 +54,9 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                 <Line />
                 <View style={StoryScreenStyle.bottomArea}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}}>
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}} onPress={() => {
+                            navigation.push("StoryComment", {storyIdx : route.params.storyIdx})
+                        }}>
                             <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} resizeMode="center"/>
                             <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.commentCnt}</Text>
                         </Pressable>
