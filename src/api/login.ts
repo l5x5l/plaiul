@@ -53,3 +53,13 @@ export type signUpResult = {
 export const postSignUp = (email : string, password : string, nickname : string) => axios.post(`${baseUri}/api/auth/sign-up`, {email : email, password : password, nickname : nickname}).then(
     response => toApiBaseResponse<signUpResult, undefined>(response)
 ).catch((error) => toApiErrorResponse<signUpResult, undefined>(error))
+
+// 토큰 재발급
+export type refreshTokenResult = {
+    accessToken: string,
+    refreshToken: string
+}
+
+export const postRefreshToken = () => axios.post(`${baseUri}/api/auth/refresh`).then(
+    response => toApiBaseResponse<refreshTokenResult, undefined>(response)
+).catch((error) => toApiErrorResponse<refreshTokenResult, undefined>(error))
