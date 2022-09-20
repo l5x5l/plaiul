@@ -9,7 +9,7 @@ const baseUri = "http://15.164.214.109"
 export const getStory = async (id: number) => {
     try {
         const accessToken = await getAccessToken()
-        const data = await axios.get(`${baseUri}/api/stories/${id}`, {headers : {Authorization: `Bearer ${accessToken}`}});
+        const data = await axios.get(`${baseUri}/api/stories/${id}`, {headers :  accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined});
         return data.data;
     } catch (error : any) {
         console.log(error.response.data);
@@ -65,9 +65,25 @@ export type getStoryCommentListResultMeta = {
 export const getStoryCommentList = async(storyIdx : number, nextCursor ?: String) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.get(`${baseUri}/api/stories/${storyIdx}/comments`, { params: { cursor: nextCursor }, headers: { Authorization: `Bearer ${accessToken}` } })
+        const response = await axios.get(`${baseUri}/api/stories/${storyIdx}/comments`, { params: { cursor: nextCursor }, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
         return toApiBaseResponse<CommentDto[], getStoryCommentListResultMeta>(response)
     } catch (error) {
-        return toApiErrorResponse<CommentDto[], undefined>(error)
+        return toApiErrorResponse<CommentDto[], getStoryCommentListResultMeta>(error)
     } 
 }
+
+// 스토리 댓글 작성
+// export type postStoryCommentResult = {
+//     commentIdx : number
+// }
+
+// export const postWriteStoryComment = async (content : String, storyIdx : Number, parentCommentIdx ?: Number) => {
+//     try {
+//         const accessToken = await getAccessToken()
+//         const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/comments`, {parentCommentIdx : parentCommentIdx, content : content}, {headers : {Authorization: `Bearer ${accessToken}`}})
+//         console.log(JSON.stringify(response))
+//         return toApiBaseResponse<postStoryCommentResult, undefined>(response)
+//     } catch (error) {
+//         return toApiErrorResponse<postStoryCommentResult, undefined>(error)
+//     }
+// }
