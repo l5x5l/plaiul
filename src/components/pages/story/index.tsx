@@ -68,7 +68,7 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                         </Pressable>
                     </View>
                     <Pressable style={{padding : 14}}>
-                        <Image source={require("../../../assets/images/share_28.png")} style={{ height: 28, width: 28}} />
+                        <Image source={require("../../../assets/images/share_28.png")} style={{ height: 28, width: 28, tintColor : colors.border}} />
                     </Pressable>
                 </View>
             </View>
