@@ -73,17 +73,17 @@ export const getStoryCommentList = async(storyIdx : number, nextCursor ?: String
 }
 
 // 스토리 댓글 작성
-// export type postStoryCommentResult = {
-//     commentIdx : number
-// }
+export type postStoryCommentResult = {
+    commentIdx : number
+}
 
-// export const postWriteStoryComment = async (content : String, storyIdx : Number, parentCommentIdx ?: Number) => {
-//     try {
-//         const accessToken = await getAccessToken()
-//         const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/comments`, {parentCommentIdx : parentCommentIdx, content : content}, {headers : {Authorization: `Bearer ${accessToken}`}})
-//         console.log(JSON.stringify(response))
-//         return toApiBaseResponse<postStoryCommentResult, undefined>(response)
-//     } catch (error) {
-//         return toApiErrorResponse<postStoryCommentResult, undefined>(error)
-//     }
-// }
+export const postWriteStoryComment = async (content : String, storyIdx : Number, parentCommentIdx ?: Number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/comments`, {parentCommentIdx : parentCommentIdx, content : content}, {headers : {Authorization: `Bearer ${accessToken}`}})
+        console.log(JSON.stringify(response))
+        return toApiBaseResponse<postStoryCommentResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<postStoryCommentResult, undefined>(error)
+    }
+}
