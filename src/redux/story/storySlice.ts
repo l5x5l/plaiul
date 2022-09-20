@@ -14,7 +14,7 @@ export const loadStory = createAsyncThunk("story/loadByIdx", async (storyIdx: nu
 })
 
 export const toggleLike = createAsyncThunk("story/like", async (storyIdx : number) => {
-    return await callNeedLoginApi<patchToggleLikeResult>(() => patchToggleLike(storyIdx))
+    return await callNeedLoginApi<patchToggleLikeResult, any>(() => patchToggleLike(storyIdx))
 })
 
 const initialState: storySliceState = {
