@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getStoryCommentList } from "../../api/stories";
 import { CommentDto } from "../../type/DTO/commentDto";
+import callNeedLoginApi from "../../util/callNeedLogin";
 
 export interface commentSliceState {
     isError: boolean,
@@ -28,7 +29,7 @@ export declare interface loadCommentPageParam {
 }
 
 export const loadCommentList = createAsyncThunk("comment/loadListByCursor", async (pageParam: loadCommentPageParam) => {
-    return await getStoryCommentList(pageParam.postIdx, pageParam.cursor)
+    return await callNeedLoginApi<CommentDto[], any>(() => getStoryCommentList(pageParam.postIdx, pageParam.cursor))
 })
 
 const commentSlice = createSlice({
@@ -53,9 +54,13 @@ const commentSlice = createSlice({
             state.isError = false
             state.isLoading = true
         }), builder.addCase(loadCommentList.fulfilled, (state, action) => {
-            if (action.payload.data !== undefined) {
-                state.data = [...state.data, ...action.payload.data]
-                console.log(`pagingData ! ${JSON.stringify(state.data)}`)
+            if (action.payload?.data !== undefined) {
+                if (state.cursor){
+                    state.data = [...state.data, ...action.payload.data]
+                } else {
+                    state.data = [...action.payload.data]
+                }
+                
                 if (action.payload.meta?.nextCursor !== null) {
                     state.cursor = action.payload!!.meta!!.nextCursor
                 } else {
