@@ -10,7 +10,7 @@ export interface storySliceState {
 }
 
 export const loadStory = createAsyncThunk("story/loadByIdx", async (storyIdx: number) => {
-    return await getStory(storyIdx)
+    return await callNeedLoginApi(() =>getStory(storyIdx))
 })
 
 export const toggleLike = createAsyncThunk("story/like", async (storyIdx : number) => {
@@ -36,7 +36,7 @@ const storySlice = createSlice({
         }), builder.addCase(loadStory.fulfilled, (state, action) => {
             console.log(JSON.stringify(action.payload))
             if (action.payload?.data !== undefined) {
-                state.value = (action.payload.data)
+                state.value = (action.payload.data as StoryDto)
                 state.isError = false
                 state.isLoading = false
             } else {

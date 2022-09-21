@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toApiBaseResponse, toApiErrorResponse } from ".";
 import { CommentDto } from "../type/DTO/commentDto";
+import { StoryDto } from "../type/DTO/storyDto";
 import { getAccessToken } from "../util/token";
 
 const baseUri = "http://15.164.214.109"
@@ -10,14 +11,10 @@ export const getStory = async (id: number) => {
     try {
         const accessToken = await getAccessToken()
         const data = await axios.get(`${baseUri}/api/stories/${id}`, {headers :  accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined});
-        return data.data;
+        return toApiBaseResponse<StoryDto, undefined>(data)
     } catch (error : any) {
         console.log(error.response.data);
-        if (error.response?.data !== undefined)
-            return error.response.data;
-
-        else
-            throw error;
+        return toApiErrorResponse(error)
     }
 }
 
@@ -85,5 +82,19 @@ export const postWriteStoryComment = async (content : String, storyIdx : Number,
         return toApiBaseResponse<postStoryCommentResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<postStoryCommentResult, undefined>(error)
+    }
+}
+// 스토리 작성
+export type postWriteStoryResult = {
+    storyIdx : number
+}
+
+export const postWriteStory = async (body : FormData) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/stories`, body, {headers : {"content-type" : "multipart/form-data",  Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<postWriteStoryResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<postWriteStoryResult, undefined>(error)
     }
 }
