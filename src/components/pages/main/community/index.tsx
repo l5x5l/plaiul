@@ -64,6 +64,14 @@ const CommunityScreen = (props: CommunityScreenProps) => {
             }} />}
                 onEndReachedThreshold={0.8}
                 onEndReached={() => { setData() }} />
+            <Pressable style={{position : "absolute", bottom : 16, right : 16}} onPress={() => {
+                props.navigation.push("StoryEdit", {})
+            }}>
+                <View style={{ height: 60, width: 60, borderRadius : 30,backgroundColor: colors.card, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={[textStyle.headline1, { color: colors.text }]}>+</Text>
+                </View>
+            </Pressable>
+
         </View>
     )
 }
