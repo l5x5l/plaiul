@@ -113,3 +113,18 @@ export const patchModifyStory = async (body : FormData, storyIdx : number) => {
         return toApiErrorResponse<patchModifyStoryResult, undefined>(error)
     }
 }
+
+// 스토리 삭제
+export type deleteStoryResult = {
+    deleted : boolean
+}
+
+export const deleteStory = async (storyIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.delete(`${baseUri}/api/stories/${storyIdx}`,  {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<deleteStoryResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<deleteStoryResult, undefined>(error)
+    }
+}

@@ -14,6 +14,9 @@ import storySlice, { loadStory, storySliceState, toggleLike } from "../../../red
 import { MoreButton } from "../../atoms/moreButton";
 import { BottomSheet } from "../../blocks/bottomSheet";
 import { TextButton } from "../../atoms/textButton";
+import { ConfirmModal } from "../../blocks/confirmModal";
+import callNeedLoginApi from "../../../util/callNeedLogin";
+import { deleteStory } from "../../../api/stories";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -24,6 +27,7 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
     const action = storySlice.actions
 
     const [bottomSheetShow, setBottomSheetShow] = useState(false)
+    const [modalShow, setModalShow] = useState(false)
 
     useEffect(() => {
         dispatch(loadStory(route.params.storyIdx))
@@ -89,24 +93,32 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                         {
                             (story.value.isWriter) ?
                                 <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"수정하기"} onPress={() => { 
-                                        navigation.push("StoryEdit", {storyIdx : story.value.storyIdx})
+                                    <TextButton text={"수정하기"} onPress={() => {
+                                        navigation.push("StoryEdit", { storyIdx: story.value.storyIdx })
                                         setBottomSheetShow(false)
                                     }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
-
-                                     }} paddingVertical={16} />
-                                </View> : 
+                                        setBottomSheetShow(false)
+                                        setModalShow(true)
+                                    }} paddingVertical={16} />
+                                </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
                                     <TextButton text={"신고하기"} onPress={() => { }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
-                                </View>}
-
+                                </View>
+                        }
                     </View>
                 } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
             </View>
+            <ConfirmModal mainText={"스토리를\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
+                const response = await callNeedLoginApi(() => deleteStory(route.params.storyIdx))
+                if (response?.data?.deleted) {
+                    navigation.goBack()
+                }
+                console.log("삭제!")
+            }} isShow={modalShow} setIsShow={setModalShow} />
         </SafeAreaView>
 
     )
