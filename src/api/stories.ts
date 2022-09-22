@@ -98,3 +98,18 @@ export const postWriteStory = async (body : FormData) => {
         return toApiErrorResponse<postWriteStoryResult, undefined>(error)
     }
 }
+
+// 스토리 수정
+export type patchModifyStoryResult = {
+    modified : boolean
+}
+
+export const patchModifyStory = async (body : FormData, storyIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${baseUri}/api/stories/${storyIdx}`, body, {headers : {"content-type" : "multipart/form-data",  Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<patchModifyStoryResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<patchModifyStoryResult, undefined>(error)
+    }
+}

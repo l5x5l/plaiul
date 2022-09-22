@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DefaultStoryDto, StoryDto } from "../../type/DTO/storyDto";
 import { getStory, patchToggleLike, patchToggleLikeResult } from "../../api/stories";
 import callNeedLoginApi from "../../util/callNeedLogin";
@@ -27,7 +27,12 @@ const storySlice = createSlice({
     name: "story",
     initialState,
     reducers: {
-
+        setStory : (state, action : PayloadAction<{title : string, content : string, tags : string[], images : string[]}>) => {
+            state.value.title = action.payload.title
+            state.value.content = action.payload.content,
+            state.value.tags = action.payload.tags,
+            state.value.images = action.payload.images
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(loadStory.pending, (state, action) => {

@@ -86,16 +86,16 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
             <View style={{ position: "absolute", bottom: 0, height: "100%" }}>
                 <BottomSheet children={
                     <View style={{ width: "100%", paddingVertical: 40 }}>
-
                         {
                             (story.value.isWriter) ?
                                 <View style={{ paddingHorizontal: 16 }}>
                                     <TextButton text={"수정하기"} onPress={() => { 
-
+                                        navigation.push("StoryEdit", {storyIdx : story.value.storyIdx})
+                                        setBottomSheetShow(false)
                                     }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
-                                        
+
                                      }} paddingVertical={16} />
                                 </View> : 
                                 <View style={{ paddingHorizontal: 16 }}>

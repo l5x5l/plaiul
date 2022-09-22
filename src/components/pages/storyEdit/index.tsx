@@ -8,10 +8,13 @@ import { storyEditScreenProps } from "../../../type/navigate/types";
 import { BackButton } from "../../atoms/backButton";
 import { Line } from "../../atoms/line";
 import { launchImageLibrary } from "react-native-image-picker"
-import { postWriteStory } from "../../../api/stories";
+import { patchModifyStory, postWriteStory } from "../../../api/stories";
 import callNeedLoginApi from "../../../util/callNeedLogin";
 import { Chip } from "../../atoms/chip";
 import { PickedImage } from "../../atoms/pickedImage";
+import storySlice, { storySliceState } from "../../../redux/story/storySlice";
+import { useSelector } from "react-redux";
+import { rootState, store } from "../../../redux/store";
 
 const StoryEditScreen = ({ route, navigation }: storyEditScreenProps) => {
 
@@ -21,6 +24,9 @@ const StoryEditScreen = ({ route, navigation }: storyEditScreenProps) => {
     const [tagWrite, setTagWrite] = useState("")
     const { colors } = useTheme()
     const [images, setImage] = useState<any[]>([])
+
+    const action = storySlice.actions
+    const story = useSelector<rootState, storySliceState>(state => state.story)
 
     const removeTag = (index: number) => {
         const temp = [...tags]
@@ -59,6 +65,7 @@ const StoryEditScreen = ({ route, navigation }: storyEditScreenProps) => {
                 type: "multipart/form-data",
                 name: picture.fileName
             }
+            console.log(JSON.stringify(photo))
             body.append("images", photo)
         })
         tags.map((tag) => {
@@ -68,12 +75,43 @@ const StoryEditScreen = ({ route, navigation }: storyEditScreenProps) => {
         body.append("title", title)
 
         const result = await callNeedLoginApi(() => postWriteStory(body))
-        console.log(JSON.stringify(result))
+        if (result?.data?.storyIdx) {
+            navigation.goBack()
+        }
+    }
+
+    const modifyStory = async () => {
+        var body = new FormData()
+        images.map((picture) => {
+            var photo = {
+                uri: picture.uri,
+                type: "multipart/form-data",
+                name: picture.fileName
+            }
+            console.log(JSON.stringify(photo))
+            body.append("images", photo)
+        })
+        tags.map((tag) => {
+            body.append("tags", tag)
+        })
+        body.append("content", content)
+        body.append("title", title)
+        const result = await callNeedLoginApi(() => patchModifyStory(body, route.params.storyIdx!!))
+        if (result?.data?.modified) {
+            const imageUris = images.map((image) => {return image.uri as string})
+            store.dispatch(action.setStory({title, content, tags, images : imageUris}))
+            navigation.goBack()
+        }
     }
 
     useEffect(() => {
         if (route.params.storyIdx) {
             console.log("modify version!")
+            setTitle(story.value.title)
+            setContent(story.value.content ? story.value.content : "")
+            setTags(story.value.tags)
+            const imageList = story.value.images.map((image, idx) => ({uri : image, fileName : `story${route.params.storyIdx}_image${idx}`}))
+            setImage(imageList)
         } else {
             console.log("create version!")
         }
@@ -86,8 +124,13 @@ const StoryEditScreen = ({ route, navigation }: storyEditScreenProps) => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <BackButton onPress={() => { navigation.goBack() }} margin={4} />
                         <Pressable onPress={async () => {
-                            if (checkUploadable())
-                                writeStory()
+                            if (checkUploadable()){
+                                if (!route.params.storyIdx) {
+                                    writeStory()
+                                } else {
+                                    modifyStory()
+                                }
+                            }
                             else
                                 console.log("cannot upload story!")
                         }}>
