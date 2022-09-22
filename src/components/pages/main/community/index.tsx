@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { rootDispatch, rootState, store } from "../../../../redux/store";
@@ -23,10 +23,19 @@ const CommunityScreen = (props: CommunityScreenProps) => {
     const postListInfo = useSelector<rootState, postListSliceState>(state => state.storyList)
     const action = postListSlice.actions
 
+    const [isRefresh, setIsRefresh] = useState(false)
+
     function setData() {
         if (!postListInfo.isLast) {
             dispatch(loadStoryList({ cursor: postListInfo.cursor, sort: postListInfo.sort }))
         }
+    }
+
+    const refreshList = () => {
+        store.dispatch(action.clear())
+        //console.log("postListInfo" + `${JSON.stringify(postListInfo)}`) // 여기서는 state !== postListinfo
+        dispatch(loadStoryList({cursor : undefined, sort : postListInfo.sort}))
+        setIsRefresh(false)
     }
 
     useEffect(() => {
@@ -42,6 +51,9 @@ const CommunityScreen = (props: CommunityScreenProps) => {
                         <SelectButton isSelected={postListInfo.category === "story"} text={"story"} marginStart={0} onPress={function (): void {
                             store.dispatch(action.switchCategory("story"))
                             setData()
+                            // store.dispatch(action.clear())) // 여기서는 state === postListinfo
+                            // console.log("postListInfo" + `${JSON.stringify(postListInfo)}`)
+                            // setData()
                         }} />
                         <SelectButton isSelected={postListInfo.category === "qna"} text={"qna"} marginStart={8} onPress={function (): void {
                             store.dispatch(action.switchCategory("qna"))
@@ -63,7 +75,7 @@ const CommunityScreen = (props: CommunityScreenProps) => {
                 props.navigation.push("Story", { storyIdx: idx })
             }} />}
                 onEndReachedThreshold={0.8}
-                onEndReached={() => { setData() }} />
+                onEndReached={() => { setData() }}  refreshing={isRefresh} onRefresh={() => { refreshList() }}/>
             <Pressable style={{position : "absolute", bottom : 16, right : 16}} onPress={() => {
                 props.navigation.push("StoryEdit", {})
             }}>

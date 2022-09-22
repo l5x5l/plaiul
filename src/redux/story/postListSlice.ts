@@ -45,6 +45,12 @@ const postListSlice = createSlice({
             state.data = []
             state.isLast = false
             state.cursor = undefined
+        },
+        clear : (state) => {
+            state.data = []
+            state.isLast = false
+            state.cursor = undefined
+            //console.log("state" + `${JSON.stringify(state)}`)
         }
     }, 
     extraReducers: (builder) => {
@@ -54,7 +60,11 @@ const postListSlice = createSlice({
         }),
         builder.addCase(loadStoryList.fulfilled, (state, action) => {
             if (action.payload?.data !== undefined) {
-                state.data = [...state.data, ...action.payload.data]
+                if (state.cursor === undefined) {
+                    state.data = [...action.payload.data]
+                } else {
+                    state.data = [...state.data, ...action.payload.data]
+                }
                 if (action.payload?.meta?.nextCursor !== null) {
                     state.cursor = action.payload!!.meta!!.nextCursor
                 } else {
