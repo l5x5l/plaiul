@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { storyScreenProps } from "../../../type/navigate/types";
 import { BackButton } from "../../atoms/backButton";
@@ -11,6 +11,9 @@ import { TagButton } from "../../atoms/tag";
 import { useDispatch, useSelector } from "react-redux";
 import { rootDispatch, rootState } from "../../../redux/store";
 import storySlice, { loadStory, storySliceState, toggleLike } from "../../../redux/story/storySlice";
+import { MoreButton } from "../../atoms/moreButton";
+import { BottomSheet } from "../../blocks/bottomSheet";
+import { TextButton } from "../../atoms/textButton";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -20,6 +23,8 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
     const story = useSelector<rootState, storySliceState>(state => state.story)
     const action = storySlice.actions
 
+    const [bottomSheetShow, setBottomSheetShow] = useState(false)
+
     useEffect(() => {
         dispatch(loadStory(route.params.storyIdx))
     }, [])
@@ -28,9 +33,15 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                    <BackButton margin={4} onPress={() => {
-                        navigation.goBack()
-                    }} />
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <BackButton margin={4} onPress={() => {
+                            navigation.goBack()
+                        }} />
+                        <MoreButton margin={4} onPress={() => {
+                            setBottomSheetShow(true)
+                        }} />
+                    </View>
+
                     <Image style={{ width: "100%", aspectRatio: 1, backgroundColor: colors.card }} source={{ uri: (story.value.images && story.value.images.length >= 1) ? story.value.images[0] : undefined }} />
                     <View style={{ padding: 16 }}>
                         <Text style={[textStyle.headline1, { color: colors.text }]}>{(!story.isError) ? (story.value.title) : "에러입니다."}</Text>
@@ -54,23 +65,47 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                 <Line />
                 <View style={StoryScreenStyle.bottomArea}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}} onPress={() => {
-                            navigation.push("StoryComment", {storyIdx : route.params.storyIdx})
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={() => {
+                            navigation.push("StoryComment", { storyIdx: route.params.storyIdx })
                         }}>
-                            <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} resizeMode="center"/>
-                            <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.commentCnt}</Text>
+                            <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor: colors.border }} resizeMode="center" />
+                            <Text style={[textStyle.body2, { color: colors.text, marginStart: 4 }]}>{story.value.commentCnt}</Text>
                         </Pressable>
-                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical : 14}} onPress={() => {
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={() => {
                             dispatch(toggleLike(route.params.storyIdx))
                         }}>
-                            <Image source={ (story.value.isLiked) ? require("../../../assets/images/heart_fill_28.png") : require("../../../assets/images/heart_stroke_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor : colors.border }} />
-                            <Text style={[textStyle.body2, {color : colors.text, marginStart : 4}]}>{story.value.likeCnt}</Text>
+                            <Image source={(story.value.isLiked) ? require("../../../assets/images/heart_fill_28.png") : require("../../../assets/images/heart_stroke_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor: colors.border }} />
+                            <Text style={[textStyle.body2, { color: colors.text, marginStart: 4 }]}>{story.value.likeCnt}</Text>
                         </Pressable>
                     </View>
-                    <Pressable style={{padding : 14}}>
-                        <Image source={require("../../../assets/images/share_28.png")} style={{ height: 28, width: 28, tintColor : colors.border}} />
+                    <Pressable style={{ padding: 14 }}>
+                        <Image source={require("../../../assets/images/share_28.png")} style={{ height: 28, width: 28, tintColor: colors.border }} />
                     </Pressable>
                 </View>
+            </View>
+            <View style={{ position: "absolute", bottom: 0, height: "100%" }}>
+                <BottomSheet children={
+                    <View style={{ width: "100%", paddingVertical: 40 }}>
+
+                        {
+                            (story.value.isWriter) ?
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"수정하기"} onPress={() => { 
+
+                                    }} paddingVertical={16} />
+                                    <Line />
+                                    <TextButton text={"삭제하기"} onPress={() => {
+                                        
+                                     }} paddingVertical={16} />
+                                </View> : 
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"신고하기"} onPress={() => { }} paddingVertical={16} />
+                                    <Line />
+                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                </View>}
+
+                    </View>
+                } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
             </View>
         </SafeAreaView>
 

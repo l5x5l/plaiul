@@ -10,7 +10,8 @@ export declare type StoryDto = {
     likeCnt : number,
     commentCnt : number,
     createdAt : string,
-    user : UserDto
+    user : UserDto,
+    isWriter : boolean
 }
 
 const DefaultStoryDto : StoryDto = {
@@ -22,7 +23,8 @@ const DefaultStoryDto : StoryDto = {
     likeCnt : 0,
     commentCnt : 0,
     createdAt : "",
-    user : DefaultUserDto
+    user : DefaultUserDto,
+    isWriter : false
 }
 
 export {DefaultStoryDto}
