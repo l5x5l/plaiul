@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toApiBaseResponse, toApiErrorResponse } from ".";
 import { CommentDto } from "../type/DTO/commentDto";
+import { QnaDto } from "../type/DTO/qnaDto";
 import { StoryDto } from "../type/DTO/storyDto";
 import { getAccessToken } from "../util/token";
 
@@ -35,6 +36,17 @@ export const getQnaList = (sort: string, cursor?: string) => axios.get(`${baseUr
     else
         throw error
 })
+
+// qna 상세 조회
+export const getQna = async (id : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const data = await axios.get(`${baseUri}/api/qna/${id}`, {headers : accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined})
+        return toApiBaseResponse<QnaDto, undefined>(data)
+    } catch (error) {
+        return toApiErrorResponse<QnaDto, undefined>(error)
+    }
+}
 
 // 좋아요 변경
 export type patchToggleLikeResult = {

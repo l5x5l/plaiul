@@ -19,6 +19,7 @@ import { Provider } from 'react-redux';
 import { LoginModal } from './src/components/blocks/loginModal';
 import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
+import { QnaScreen } from './src/components/pages/qna';
 import { StoryScreen } from './src/components/pages/story';
 import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { StoryEditScreen } from './src/components/pages/storyEdit';
@@ -43,6 +44,7 @@ const App = () => {
                 <Stack.Screen name="LoginHome" component={LoginHome} />
                 <Stack.Screen name="StoryComment" component={StoryCommentScreen} />
                 <Stack.Screen name="StoryEdit" component={StoryEditScreen}/>
+                <Stack.Screen name="Qna" component={QnaScreen}/>
               </Stack.Navigator>
             ), [])
           }

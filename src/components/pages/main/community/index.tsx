@@ -79,7 +79,10 @@ const CommunityScreen = (props: CommunityScreenProps) => {
                     :
 
                     <FlatList key={"qna_flatlist"} keyExtractor={item => (item.storyIdx === undefined) ? `qna_${item.qnaIdx}` : `story_${item.storyIdx}`} numColumns={1} data={postListInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
-                        props.navigation.push("Story", { storyIdx: idx })
+                        if (postListInfo.category === "story")
+                            props.navigation.push("Story", { storyIdx: idx })
+                        else
+                            props.navigation.push("Qna", {qnaIdx : idx})
                     }} />}
                         onEndReachedThreshold={0.8}
                         onEndReached={() => { setData() }} refreshing={isRefresh} onRefresh={() => { refreshList() }} />
