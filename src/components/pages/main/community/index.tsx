@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { rootDispatch, rootState, store } from "../../../../redux/store";
-import postListSlice, { loadStoryList, postListSliceState } from "../../../../redux/story/postListSlice";
+import postListSlice, { loadPostList, postListSliceState } from "../../../../redux/story/postListSlice";
 import textStyle from "../../../../style/textStyle";
 import { RootStackParamList } from "../../../../type/navigate/types";
 import { Line } from "../../../atoms/line";
@@ -25,22 +25,21 @@ const CommunityScreen = (props: CommunityScreenProps) => {
 
     const [isRefresh, setIsRefresh] = useState(false)
 
+    useEffect(() => {
+        setData()
+    }, [postListInfo.category])
+
     function setData() {
         if (!postListInfo.isLast) {
-            dispatch(loadStoryList({ cursor: postListInfo.cursor, sort: postListInfo.sort }))
+            dispatch(loadPostList({ cursor: postListInfo.cursor, sort: postListInfo.sort, category: postListInfo.category }))
         }
     }
 
     const refreshList = () => {
         store.dispatch(action.clear())
-        //console.log("postListInfo" + `${JSON.stringify(postListInfo)}`) // 여기서는 state !== postListinfo
-        dispatch(loadStoryList({cursor : undefined, sort : postListInfo.sort}))
+        dispatch(loadPostList({ cursor: undefined, sort: postListInfo.sort, category: postListInfo.category }))
         setIsRefresh(false)
     }
-
-    useEffect(() => {
-        setData()
-    }, [])
 
     return (
         <View style={{ flex: 1, paddingHorizontal: 16 }}>
@@ -48,16 +47,15 @@ const CommunityScreen = (props: CommunityScreenProps) => {
             {
                 useMemo(() =>
                     <View style={CommunityStyle.categoryButtonArea}>
-                        <SelectButton isSelected={postListInfo.category === "story"} text={"story"} marginStart={0} onPress={function (): void {
-                            store.dispatch(action.switchCategory("story"))
-                            setData()
-                            // store.dispatch(action.clear())) // 여기서는 state === postListinfo
-                            // console.log("postListInfo" + `${JSON.stringify(postListInfo)}`)
-                            // setData()
+                        <SelectButton isSelected={postListInfo.category === "story"} text={"story"} marginStart={0} onPress={() => {
+                            dispatch(action.switchCategory("story"))
+                            // setData() 를 여기서 호출한다고 하더라도, 이미 이 함수에서 postListInfo.category 는 직전에 호출한 dispatch 내용을 
+                            // 반영하지 못한다.
+                            // 이 함수가 종료된 다음에야 re rendering 이 되고, 이후에 데이터가 갱신되는 것 같다.
+                            // 아니면 dispatch 로 호출한 함수가 비동기적이어서 데이터 변경이 즉시 이루어지지 않거나...
                         }} />
                         <SelectButton isSelected={postListInfo.category === "qna"} text={"qna"} marginStart={8} onPress={function (): void {
-                            store.dispatch(action.switchCategory("qna"))
-                            setData()
+                            dispatch(action.switchCategory("qna"))
                         }} />
                     </View>
                     , [postListInfo.category])
@@ -71,15 +69,26 @@ const CommunityScreen = (props: CommunityScreenProps) => {
                 </Pressable>
             </View>
             <Line marginTop={8} />
-            <FlatList keyExtractor={item => (item.storyIdx === undefined) ? `qna_${item.qnaIdx}` : `story_${item.storyIdx}`} numColumns={2} data={postListInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
-                props.navigation.push("Story", { storyIdx: idx })
-            }} />}
-                onEndReachedThreshold={0.8}
-                onEndReached={() => { setData() }}  refreshing={isRefresh} onRefresh={() => { refreshList() }}/>
-            <Pressable style={{position : "absolute", bottom : 16, right : 16}} onPress={() => {
+            {
+                postListInfo.category === "story" ?
+                    <FlatList key={"story_flatlist"} keyExtractor={item => (item.storyIdx === undefined) ? `qna_${item.qnaIdx}` : `story_${item.storyIdx}`} numColumns={2} data={postListInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
+                        props.navigation.push("Story", { storyIdx: idx })
+                    }} />}
+                        onEndReachedThreshold={0.8}
+                        onEndReached={() => { setData() }} refreshing={isRefresh} onRefresh={() => { refreshList() }} />
+                    :
+
+                    <FlatList key={"qna_flatlist"} keyExtractor={item => (item.storyIdx === undefined) ? `qna_${item.qnaIdx}` : `story_${item.storyIdx}`} numColumns={1} data={postListInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
+                        props.navigation.push("Story", { storyIdx: idx })
+                    }} />}
+                        onEndReachedThreshold={0.8}
+                        onEndReached={() => { setData() }} refreshing={isRefresh} onRefresh={() => { refreshList() }} />
+
+            }
+            <Pressable style={{ position: "absolute", bottom: 16, right: 16 }} onPress={() => {
                 props.navigation.push("StoryEdit", {})
             }}>
-                <View style={{ height: 60, width: 60, borderRadius : 30,backgroundColor: colors.card, alignItems: "center", justifyContent: "center" }}>
+                <View style={{ height: 60, width: 60, borderRadius: 30, backgroundColor: colors.card, alignItems: "center", justifyContent: "center" }}>
                     <Text style={[textStyle.headline1, { color: colors.text }]}>+</Text>
                 </View>
             </Pressable>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getStoryList } from "../../api/stories";
+import { getQnaList, getStoryList } from "../../api/stories";
 import { PostDto } from "../../type/DTO/postDto";
 
 export interface postListSliceState {
@@ -23,11 +23,17 @@ const initialState: postListSliceState = {
 
 export declare interface loadPageParam {
     cursor ?: string,
-    sort: string
+    sort: string,
+    category : "story" | "qna"
 }
 
-export const loadStoryList = createAsyncThunk("story/loadListByCursor", async (pageParam: loadPageParam) => {
-    return await getStoryList(pageParam.sort, pageParam.cursor)
+export const loadPostList = createAsyncThunk("story/loadListByCursor", async (pageParam: loadPageParam) => {
+    if (pageParam.category === "story") {
+        return await getStoryList(pageParam.sort, pageParam.cursor)
+    } else {
+        return await getQnaList(pageParam.sort, pageParam.cursor)
+    }
+    
 })
 
 const postListSlice = createSlice({
@@ -54,11 +60,11 @@ const postListSlice = createSlice({
         }
     }, 
     extraReducers: (builder) => {
-        builder.addCase(loadStoryList.pending, (state, action) => {
+        builder.addCase(loadPostList.pending, (state, action) => {
             state.isLoading = true
             state.isError = false
         }),
-        builder.addCase(loadStoryList.fulfilled, (state, action) => {
+        builder.addCase(loadPostList.fulfilled, (state, action) => {
             if (action.payload?.data !== undefined) {
                 if (state.cursor === undefined) {
                     state.data = [...action.payload.data]
@@ -74,7 +80,7 @@ const postListSlice = createSlice({
             state.isLoading = false
             state.isError = false
         }),
-        builder.addCase(loadStoryList.rejected, (state, action) => {
+        builder.addCase(loadPostList.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
         })

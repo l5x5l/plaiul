@@ -29,7 +29,7 @@ export const getStoryList = (sort: string, cursor?: string) => axios.get(`${base
 })
 
 // qna 리스트 조회
-export const getQnaList = (sort: string, cursor?: string) => axios.get(`${baseUri}/api/stories`, { params: { sort: sort, cursor: cursor }, headers: {} }).catch((error) => {
+export const getQnaList = (sort: string, cursor?: string) => axios.get(`${baseUri}/api/qna`, { params: { sort: sort, cursor: cursor }, headers: {} }).then(data => data.data).catch((error) => {
     if (error.response?.data !== undefined)
         return error.response.data
     else

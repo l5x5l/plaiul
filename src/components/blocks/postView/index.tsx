@@ -21,9 +21,20 @@ const PostView = (props: PostViewProps) => {
 
     return (
         useMemo(() =>
+            props.post.storyIdx ?
             <Pressable style={{ flex: 0.5 }} onPress={clickItem}>
                 <View style={[PostViewStyle.container,{marginHorizontal: 2, marginTop: 16, borderColor: colors.border, borderWidth: 2}]}>
                     <Image source={{ uri: props.post.thumbnail }} style={PostViewStyle.thumbNail} />
+                    <View style={PostViewStyle.textArea}>
+                        <Text style={[textStyle.title2, { color: colors.text }]} numberOfLines={1}>{props.post.title}</Text>
+                        <Text style={[textStyle.body3, { color: colors.text, marginTop: 8 }]} numberOfLines={2}>{props.post.content + "\n"}</Text>
+                        <Text style={[textStyle.body3, { color: colors.text, marginTop: 8 }]} numberOfLines={1}>{props.post.user?.nickname}</Text>
+                    </View>
+                </View>
+            </Pressable>
+            :
+            <Pressable style={{ flex: 1, minHeight : 80 }} onPress={clickItem}>
+                <View style={[PostViewStyle.container,{marginHorizontal: 2, marginTop: 16, borderColor: colors.border, borderWidth: 2}]}>
                     <View style={PostViewStyle.textArea}>
                         <Text style={[textStyle.title2, { color: colors.text }]} numberOfLines={1}>{props.post.title}</Text>
                         <Text style={[textStyle.body3, { color: colors.text, marginTop: 8 }]} numberOfLines={2}>{props.post.content + "\n"}</Text>
