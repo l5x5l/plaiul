@@ -29,7 +29,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
 
     function setData() {
         if (!commentListInfo.isLast) {
-            dispatch(loadCommentList({ postIdx: route.params.storyIdx, cursor: commentListInfo.cursor }))
+            dispatch(loadCommentList({ postIdx: route.params.storyIdx, cursor: commentListInfo.cursor, category : "story"}))
         }
     }
 
@@ -43,7 +43,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
 
     function refresh() {
         store.dispatch(action.clear())
-        dispatch(loadCommentList({postIdx : route.params.storyIdx, cursor : undefined}))
+        dispatch(loadCommentList({postIdx : route.params.storyIdx, cursor : undefined, category : "story"}))
         setIsRefresh(false)
     }
 

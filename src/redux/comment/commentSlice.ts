@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getQnaCommentList } from "../../api/qna";
 import { getStoryCommentList } from "../../api/stories";
 import { CommentDto } from "../../type/DTO/commentDto";
 import callNeedLoginApi from "../../util/callNeedLogin";
@@ -25,11 +26,17 @@ const initialState: commentSliceState = {
 
 export declare interface loadCommentPageParam {
     postIdx: number,
-    cursor?: string
+    cursor?: string,
+    category : "story" | "qna"
 }
 
 export const loadCommentList = createAsyncThunk("comment/loadListByCursor", async (pageParam: loadCommentPageParam) => {
-    return await callNeedLoginApi<CommentDto[], any>(() => getStoryCommentList(pageParam.postIdx, pageParam.cursor))
+    if (pageParam.category === "story") {
+        return await callNeedLoginApi<CommentDto[], any>(() => getStoryCommentList(pageParam.postIdx, pageParam.cursor))
+    } else {
+        return await callNeedLoginApi<CommentDto[], any>(() => getQnaCommentList(pageParam.postIdx, pageParam.cursor))
+    }
+    
 })
 
 const commentSlice = createSlice({
