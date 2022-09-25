@@ -29,25 +29,6 @@ export const getStoryList = (sort: string, cursor?: string) => axios.get(`${base
         throw error
 })
 
-// qna 리스트 조회
-export const getQnaList = (sort: string, cursor?: string) => axios.get(`${baseUri}/api/qna`, { params: { sort: sort, cursor: cursor }, headers: {} }).then(data => data.data).catch((error) => {
-    if (error.response?.data !== undefined)
-        return error.response.data
-    else
-        throw error
-})
-
-// qna 상세 조회
-export const getQna = async (id : number) => {
-    try {
-        const accessToken = await getAccessToken()
-        const data = await axios.get(`${baseUri}/api/qna/${id}`, {headers : accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined})
-        return toApiBaseResponse<QnaDto, undefined>(data)
-    } catch (error) {
-        return toApiErrorResponse<QnaDto, undefined>(error)
-    }
-}
-
 // 좋아요 변경
 export type patchToggleLikeResult = {
     isLiked: boolean

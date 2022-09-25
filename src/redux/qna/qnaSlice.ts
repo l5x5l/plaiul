@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getQna } from "../../api/stories"
+import { getQna } from "../../api/qna"
 import { DefaultQnaDto, QnaDto } from "../../type/DTO/qnaDto"
 import callNeedLoginApi from "../../util/callNeedLogin"
 

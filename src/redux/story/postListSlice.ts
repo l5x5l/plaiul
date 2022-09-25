@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getQnaList, getStoryList } from "../../api/stories";
+import { getStoryList } from "../../api/stories";
+import { getQnaList } from "../../api/qna";
 import { PostDto } from "../../type/DTO/postDto";
 
 export interface postListSliceState {
