@@ -3,10 +3,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import LoginSlice from "../../../../redux/login/loginSlice";
 import { rootDispatch, rootState, store } from "../../../../redux/store";
 import postListSlice, { loadPostList, postListSliceState } from "../../../../redux/story/postListSlice";
 import textStyle from "../../../../style/textStyle";
 import { RootStackParamList } from "../../../../type/navigate/types";
+import { checkIsLogin } from "../../../../util/token";
 import { Line } from "../../../atoms/line";
 import { SelectButton } from "../../../atoms/selectButton";
 import PostView from "../../../blocks/postView";
@@ -22,6 +24,7 @@ const CommunityScreen = (props: CommunityScreenProps) => {
     const dispatch = useDispatch<rootDispatch>()
     const postListInfo = useSelector<rootState, postListSliceState>(state => state.storyList)
     const action = postListSlice.actions
+    const loginAction = LoginSlice.actions
 
     const [isRefresh, setIsRefresh] = useState(false)
 
@@ -88,8 +91,13 @@ const CommunityScreen = (props: CommunityScreenProps) => {
                         onEndReached={() => { setData() }} refreshing={isRefresh} onRefresh={() => { refreshList() }} />
 
             }
-            <Pressable style={{ position: "absolute", bottom: 16, right: 16 }} onPress={() => {
-                props.navigation.push("StoryEdit", {})
+            <Pressable style={{ position: "absolute", bottom: 16, right: 16 }} onPress={async () => {
+                const isLogin = await checkIsLogin()
+                if (isLogin) {
+                    props.navigation.push("StoryEdit", {})
+                } else {
+                    dispatch(loginAction.callBottomSheet())
+                }
             }}>
                 <View style={{ height: 60, width: 60, borderRadius: 30, backgroundColor: colors.card, alignItems: "center", justifyContent: "center" }}>
                     <Text style={[textStyle.headline1, { color: colors.text }]}>+</Text>

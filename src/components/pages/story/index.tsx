@@ -17,6 +17,8 @@ import { TextButton } from "../../atoms/textButton";
 import { ConfirmModal } from "../../blocks/confirmModal";
 import callNeedLoginApi from "../../../util/callNeedLogin";
 import { deleteStory } from "../../../api/stories";
+import LoginSlice from "../../../redux/login/loginSlice";
+import { checkIsLogin } from "../../../util/token";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -25,6 +27,7 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
     const dispatch = useDispatch<rootDispatch>()
     const story = useSelector<rootState, storySliceState>(state => state.story)
     const action = storySlice.actions
+    const loginAction = LoginSlice.actions
 
     const [bottomSheetShow, setBottomSheetShow] = useState(false)
     const [modalShow, setModalShow] = useState(false)
@@ -75,8 +78,13 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                             <Image source={require("../../../assets/images/comment_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor: colors.border }} resizeMode="center" />
                             <Text style={[textStyle.body2, { color: colors.text, marginStart: 4 }]}>{story.value.commentCnt}</Text>
                         </Pressable>
-                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={() => {
-                            dispatch(toggleLike(route.params.storyIdx))
+                        <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={async () => {
+                            const isLogin = await checkIsLogin()
+                            if (isLogin) {
+                                dispatch(toggleLike(route.params.storyIdx))
+                            } else {
+                                dispatch(loginAction.callBottomSheet())
+                            }
                         }}>
                             <Image source={(story.value.isLiked) ? require("../../../assets/images/heart_fill_28.png") : require("../../../assets/images/heart_stroke_28.png")} style={{ height: 28, width: 28, marginStart: 14, tintColor: colors.border }} />
                             <Text style={[textStyle.body2, { color: colors.text, marginStart: 4 }]}>{story.value.likeCnt}</Text>

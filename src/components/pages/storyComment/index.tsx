@@ -6,10 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { postStoryCommentResult, postWriteStoryComment } from "../../../api/stories";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
+import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState, store } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { storyCommentScreenProps } from "../../../type/navigate/types";
 import callNeedLoginApi from "../../../util/callNeedLogin";
+import { checkIsLogin } from "../../../util/token";
 import { BackButton } from "../../atoms/backButton";
 import { Line } from "../../atoms/line";
 import { CommentView } from "../../blocks/commentView";
@@ -20,6 +22,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
     const dispatch = useDispatch<rootDispatch>()
     const commentListInfo = useSelector<rootState, commentSliceState>(state => state.commentList)
     const action = commentSlice.actions
+    const loginAction = LoginSlice.actions
 
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
@@ -70,7 +73,13 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                     <View style={{ flexDirection: "row", padding: 8, borderColor: colors.border, borderWidth: 1 }}>
                         <TextInput style={{ flex: 1, height: 40, backgroundColor: dark ? "#F3F0EB" : "#E8EDEB" }} value={writingComment} onChangeText={setWritingComment} />
                         <Pressable style={{ height: 40 }} onPress={async () => {
-                            sendComment()
+                            const isLogin = await checkIsLogin()
+                            if (isLogin) {
+                                sendComment()
+                            } else {
+                                dispatch(loginAction.callBottomSheet())
+                            }
+                            
                         }}>
                             <View style={{ backgroundColor: colors.border, flex : 1, alignItems : "center", justifyContent : "center" }}>
                                 <Text style={[{ paddingHorizontal: 16, color: colors.background }, textStyle.body2]}>등록</Text>

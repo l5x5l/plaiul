@@ -37,5 +37,10 @@ const removeAccessToken = async() => {
     await AsyncStorage.removeItem(accessTokenKey)
 }
 
+const checkIsLogin = async() => {
+    const result = await getAccessToken()
+    return (result !== null)
+}
 
-export { getRefreshToken, getAccessToken, setRefreshToken, setAccessToken, removeRefreshToken, removeAccessToken }
+
+export { getRefreshToken, getAccessToken, setRefreshToken, setAccessToken, removeRefreshToken, removeAccessToken, checkIsLogin }
