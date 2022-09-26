@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-import { getTipDetail } from "../../../api/tip";
+import { patchToggleLikeResult } from "../../../api/stories";
+import { getTipDetail, patchToggleTipLike } from "../../../api/tip";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
@@ -26,22 +27,22 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
             setTipDetail(response.data)
     }
 
-    // const toggleLike = async () => {
-    //     const response = await callNeedLoginApi<patchToggleLikeResult, any>(()=> patchToggleTipLike(route.params.tipIdx))
-    //     console.log(JSON.stringify(response))
-    //     if (response?.data && tipDetail) {
-    //         const temp = {...tipDetail}
-    //         temp.isLiked = response.data.isLiked
-    //         if (temp.isLiked) {
-    //             temp.likeCnt += 1
-    //         } else {
-    //             temp.likeCnt -= 1
-    //         }
+    const toggleLike = async () => {
+        const response = await callNeedLoginApi<patchToggleLikeResult, any>(()=> patchToggleTipLike(route.params.tipIdx))
+        console.log(JSON.stringify(response))
+        if (response?.data && tipDetail) {
+            const temp = {...tipDetail}
+            temp.isLiked = response.data.isLiked
+            if (temp.isLiked) {
+                temp.likeCnt += 1
+            } else {
+                temp.likeCnt -= 1
+            }
 
-    //         setTipDetail(temp)
+            setTipDetail(temp)
             
-    //     }
-    // }
+        }
+    }
 
     useEffect(() => {
         loadTipDetail()
@@ -88,7 +89,7 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                         <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={async () => {
                             const isLogin = await checkIsLogin()
                             if (isLogin) {
-                                //toggleLike()
+                                toggleLike()
                             } else {
                                 dispatch(loginAction.callBottomSheet())
                             }

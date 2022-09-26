@@ -2,6 +2,7 @@ import axios from "axios"
 import { toApiBaseResponse, toApiErrorResponse } from "."
 import { TipDeatilDto, TipDto } from "../type/DTO/tipDto"
 import { getAccessToken } from "../util/token"
+import { patchToggleLikeResult } from "./stories"
 
 const baseUri = "http://15.164.214.109/api/tips"
 
@@ -38,5 +39,16 @@ export const getTipDetail = async (tipIdx : number) => {
         return toApiBaseResponse<TipDeatilDto, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<TipDeatilDto, undefined>(error)
+    }
+}
+
+// tip 좋아요 변경
+export const patchToggleTipLike = async (tipIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${baseUri}/${tipIdx}/like`, {}, {headers : {Authorization: `Bearer ${accessToken}`}})
+        return toApiBaseResponse<patchToggleLikeResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<patchToggleLikeResult, undefined>(error)
     }
 }
