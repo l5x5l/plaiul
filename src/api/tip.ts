@@ -1,6 +1,6 @@
 import axios from "axios"
 import { toApiBaseResponse, toApiErrorResponse } from "."
-import { TipDto } from "../type/DTO/tipDto"
+import { TipDeatilDto, TipDto } from "../type/DTO/tipDto"
 import { getAccessToken } from "../util/token"
 
 const baseUri = "http://15.164.214.109/api/tips"
@@ -27,5 +27,16 @@ export const getTip = async (nextCursor?: string) => {
         return toApiBaseResponse<TipDto[], getTipResultMeta>(response)
     } catch (error) {
         return toApiErrorResponse<TipDto[], getTipResultMeta>(error)
+    }
+}
+
+// tip 상세 조회
+export const getTipDetail = async (tipIdx : number) => {
+    try { 
+        const accessToken = await getAccessToken()
+        const response = await axios.get(`${baseUri}/${tipIdx}`, {params : { tipIdx : tipIdx }, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
+        return toApiBaseResponse<TipDeatilDto, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<TipDeatilDto, undefined>(error)
     }
 }

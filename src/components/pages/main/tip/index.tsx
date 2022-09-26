@@ -1,14 +1,21 @@
 import { useTheme } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useRef } from "react";
 import { FlatList, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { rootState, rootDispatch } from "../../../../redux/store";
 import { loadBestTip, loadTip, tipListSliceState } from "../../../../redux/tip/tipListSlice";
 import textStyle from "../../../../style/textStyle";
+import { RootStackParamList } from "../../../../type/navigate/types";
 import { TipPagerView } from "../../../blocks/tipPagerView";
 import  TipView  from "../../../blocks/tipView";
 
-const TipScreen = () => {
+export declare type TipScreenProps = {
+    navigation: NativeStackNavigationProp<RootStackParamList, "Main", undefined>
+}
+
+
+const TipScreen = (props : TipScreenProps) => {
 
     const { colors } = useTheme()
     var pageIdx = useRef(0)
@@ -27,15 +34,19 @@ const TipScreen = () => {
             dispatch(loadTip(tipListInfo.cursor))
     }
 
+    
+
     return (
         <View style={{ flex: 1 }}>
             {/* item하고 {(item)} 의 차이가 뭐여 */}
             <FlatList keyExtractor={item => item.tipIdx.toString()} data={tipListInfo.pagingData} renderItem={({ item }) =>
-                <TipView tip={item} />
+                <TipView tip={item} onClick={() => {
+                    props.navigation.push("Tip", {tipIdx : item.tipIdx})
+                }}/>
             } ListHeaderComponent={
                 <View>
                     <TipPagerView tipClick={function (itemIdx: number): void {
-
+                        props.navigation.push("Tip", {tipIdx : itemIdx})
                     }} screen={"tip"} tipList={tipListInfo.bestData} />
                     <Text style={[textStyle.headline3, { marginStart: 16, marginTop: 56, marginBottom: 16, color: colors.text }]}>전체 목록</Text>
 

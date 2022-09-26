@@ -7,12 +7,7 @@ import { TipDto } from "../../../type/DTO/tipDto";
 
 export declare type TipViewProps = {
     tip: TipDto,
-    onClick?: (idx: number) => void
-}
-
-
-const onClick = () => {
-    
+    onClick : (idx: number) => void
 }
 
 const TipView = (props: TipViewProps) => {
@@ -20,7 +15,7 @@ const TipView = (props: TipViewProps) => {
 
     return (
         useMemo(() =>
-            <Pressable style={{ flex: 1, marginHorizontal: 16, marginBottom: 8, borderColor: colors.border, borderWidth: 2 }} onPress={onClick}>
+            <Pressable style={{ flex: 1, marginHorizontal: 16, marginBottom: 8, borderColor: colors.border, borderWidth: 2 }} onPress={() => {props.onClick(props.tip.tipIdx)}}>
                 <View style={PostViewStyle.container}>
                     <Image source={{ uri: props.tip.thumbnail }} style={PostViewStyle.thumbNail} />
                     <View style={PostViewStyle.textArea}>

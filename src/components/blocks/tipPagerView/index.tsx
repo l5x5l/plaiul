@@ -64,12 +64,15 @@ const TipPagerView = (props: TipPagerViewProps) => {
                                 {
                                     props.tipList.map((data, index) => (
                                         <View style={{ flex: 1 }} collapsable={false} key={`homeTip_${index}`}>
-                                            <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
-                                            <View style={TipPagerViewStyle.imageFilter} />
-                                            <View style={TipPagerViewStyle.tipTextArea}>
-                                                <Text numberOfLines={2} style={[textStyle.headline2, { color: '#D9CCB9' }]}>{data.title}</Text>
-                                                <Text style={[textStyle.title2, { marginTop: 8, color: '#D9CCB9' }]}>{data.user.nickname}</Text>
-                                            </View>
+                                            <Pressable style={{ flex: 1 }}>
+
+                                                <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
+                                                <View style={TipPagerViewStyle.imageFilter} />
+                                                <View style={TipPagerViewStyle.tipTextArea}>
+                                                    <Text numberOfLines={2} style={[textStyle.headline2, { color: '#D9CCB9' }]}>{data.title}</Text>
+                                                    <Text style={[textStyle.title2, { marginTop: 8, color: '#D9CCB9' }]}>{data.user.nickname}</Text>
+                                                </View>
+                                            </Pressable>
                                         </View>
                                     ))
                                 }
@@ -79,18 +82,18 @@ const TipPagerView = (props: TipPagerViewProps) => {
                 </View>
             </View>
         )
-    } 
+    }
     else {
         return (
             <View>
-                <View style={[TipPagerViewStyle.rowContainer, {justifyContent : "space-between"}]}>
-                    <View style={{flexDirection : "row", alignItems : "flex-end"}}>
+                <View style={[TipPagerViewStyle.rowContainer, { justifyContent: "space-between" }]}>
+                    <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                         <Text style={[textStyle.headline2, { color: theme.colors.text, marginStart: 16 }]}>BestTip</Text>
-                        <Text style={[textStyle.body3, { color: theme.colors.text, marginStart : 8 }]}>{`${activePage + 1}/${props.tipList.length}`}</Text>
+                        <Text style={[textStyle.body3, { color: theme.colors.text, marginStart: 8 }]}>{`${activePage + 1}/${props.tipList.length}`}</Text>
                     </View>
                     {
                         useMemo(() =>
-                            <View style={{ alignSelf: "flex-end", marginHorizontal: 12, flexDirection : "row" }}>
+                            <View style={{ alignSelf: "flex-end", marginHorizontal: 12, flexDirection: "row" }}>
                                 {
                                     props.tipList.map((_, index) => (
                                         <Leaf isSelected={(index) === activePage} color={theme.colors.text} key={`homeTipCount_${index}`}></Leaf>
@@ -101,10 +104,10 @@ const TipPagerView = (props: TipPagerViewProps) => {
                             , [props.tipList, activePage])
                     }
                 </View>
-                <View style={{ marginTop: 16, paddingHorizontal : 16 }}>
+                <View style={{ marginTop: 16, paddingHorizontal: 16 }}>
                     {
                         useMemo(() =>
-                            <AnimagedPagerView style={{width : "100%", aspectRatio : 1}} pageMargin={16} onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
+                            <AnimagedPagerView style={{ width: "100%", aspectRatio: 1 }} pageMargin={16} onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
                                 [{
                                     nativeEvent: {
                                         offset: offsetAnimatedValue,
@@ -121,13 +124,15 @@ const TipPagerView = (props: TipPagerViewProps) => {
                             )}>
                                 {
                                     props.tipList.map((data, index) => (
-                                        <View style={{ width : "100%", height : "100%",  borderColor : theme.colors.border, borderWidth : 2 }} collapsable={false} key={`Tip_${index}`}>
-                                            <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
-                                            <View style={TipPagerViewStyle.imageFilter} />
-                                            <View style={TipPagerViewStyle.tipTextArea_growerTip}>
-                                                <Text numberOfLines={2} style={[textStyle.headline1, { color: '#D9CCB9', marginBottom : 32}]}>{data.title}</Text>
-                                                <Text style={[textStyle.title1, { color: '#D9CCB9' }]}>{data.user.nickname}</Text>
-                                            </View>
+                                        <View style={{ width: "100%", height: "100%", borderColor: theme.colors.border, borderWidth: 2 }} collapsable={false} key={`Tip_${index}`}>
+                                            <Pressable onPress={() => props.tipClick(data.tipIdx)} style={{ flex: 1 }}>
+                                                <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
+                                                <View style={TipPagerViewStyle.imageFilter} />
+                                                <View style={TipPagerViewStyle.tipTextArea_growerTip}>
+                                                    <Text numberOfLines={2} style={[textStyle.headline1, { color: '#D9CCB9', marginBottom: 32 }]}>{data.title}</Text>
+                                                    <Text style={[textStyle.title1, { color: '#D9CCB9' }]}>{data.user.nickname}</Text>
+                                                </View>
+                                            </Pressable>
                                         </View>
                                     ))
                                 }
@@ -164,8 +169,8 @@ const TipPagerViewStyle = StyleSheet.create({
         height: 24,
         width: 24
     },
-    tipTextArea_growerTip : {
-        position : "absolute", left : 16, bottom : 16, right : 16
+    tipTextArea_growerTip: {
+        position: "absolute", left: 16, bottom: 16, right: 16
     }
 })
 

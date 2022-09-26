@@ -24,6 +24,7 @@ import { QnaEditScreen } from './src/components/pages/qnaEdit';
 import { StoryScreen } from './src/components/pages/story';
 import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { StoryEditScreen } from './src/components/pages/storyEdit';
+import { TipDetailScreen } from './src/components/pages/tip';
 import { store } from './src/redux/store';
 import { RootStackParamList } from './src/type/navigate/types';
 import { Theme } from './src/type/theme';
@@ -47,6 +48,7 @@ const App = () => {
                 <Stack.Screen name="StoryEdit" component={StoryEditScreen}/>
                 <Stack.Screen name="Qna" component={QnaScreen}/>
                 <Stack.Screen name="QnaEdit" component={QnaEditScreen}/>
+                <Stack.Screen name="Tip" component={TipDetailScreen}/>
               </Stack.Navigator>
             ), [])
           }

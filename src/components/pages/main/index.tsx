@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useTheme } from "@react-navigation/native";
+import { NavigationContext, useTheme } from "@react-navigation/native";
 import React from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,9 +29,11 @@ const Main = ({navigation} : mainScreenProps) => {
                             () => <CommunityScreen navigation={navigation}/>
                         }
                     </Tab.Screen>
-                    <Tab.Screen name="Tip" component={TipScreen} options={{tabBarIcon:({focused}) => (
+                    <Tab.Screen name="Tip" options={{tabBarIcon:({focused}) => (
                         <Image style={{height : 24, width : 24, tintColor : colors.border}} source={focused ? require("../../../assets/images/tip_fill_24.png") : require("../../../assets/images/tip_stroke_24.png")}/>
-                    )}}/>
+                    )}}>
+                        {() => <TipScreen navigation={navigation}/>}
+                    </Tab.Screen>
                     <Tab.Screen name="MyPage" component={MyPageScreen} options={{tabBarIcon:({focused}) => (
                         <Image style={{height : 24, width : 24, tintColor : colors.border}} source={focused ? require("../../../assets/images/mypage_fill_24.png") : require("../../../assets/images/mypage_stroke_24.png")}/>
                     )}}/>
