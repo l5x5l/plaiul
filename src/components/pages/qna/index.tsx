@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { postQnaCommentResult, postWriteQnaComment } from "../../../api/qna";
+import { deleteQna, postQnaCommentResult, postWriteQnaComment } from "../../../api/qna";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState } from "../../../redux/store";
@@ -58,6 +58,13 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
         }
     }
 
+    async function removeQna() {
+        const response = await callNeedLoginApi(() => deleteQna(route.params.qnaIdx))
+        if (response?.data?.deleted) {
+            navigation.goBack()
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -105,8 +112,8 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                             isQnaWriter ?
                                 <View style={{ paddingHorizontal: 16 }}>
                                     <TextButton text={"수정하기"} onPress={() => {
-                                        
                                         setBottomSheetShow(false)
+                                        navigation.push("QnaEdit", {qnaIdx : route.params.qnaIdx})
                                     }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
@@ -124,7 +131,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                 } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
             </View>
             <ConfirmModal mainText={"qna를\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
-                console.log("삭제!")
+                removeQna()
             }} isShow={modalShow} setIsShow={setModalShow} />
         </SafeAreaView>
     )

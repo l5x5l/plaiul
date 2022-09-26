@@ -94,7 +94,10 @@ const CommunityScreen = (props: CommunityScreenProps) => {
             <Pressable style={{ position: "absolute", bottom: 16, right: 16 }} onPress={async () => {
                 const isLogin = await checkIsLogin()
                 if (isLogin) {
-                    props.navigation.push("StoryEdit", {})
+                    if (postListInfo.category === "story")
+                        props.navigation.push("StoryEdit", {})
+                    else 
+                        props.navigation.push("QnaEdit", {})
                 } else {
                     dispatch(loginAction.callBottomSheet())
                 }

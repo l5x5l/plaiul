@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { getQna } from "../../api/qna"
 import { DefaultQnaDto, QnaDto } from "../../type/DTO/qnaDto"
 import callNeedLoginApi from "../../util/callNeedLogin"
@@ -27,6 +27,10 @@ const qnaSlice = createSlice({
             state.value = DefaultQnaDto
             state.isError = false,
             state.isLoading = false
+        },
+        setQna : (state, action : PayloadAction<{title : string, content : string}>) => {
+            state.value.title = action.payload.title
+            state.value.content = action.payload.content
         }
     }, 
     extraReducers : (builder) => {

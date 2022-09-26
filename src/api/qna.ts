@@ -54,3 +54,48 @@ export const postWriteQnaComment = async (content : String, qnaIdx : Number, par
         return toApiErrorResponse<postQnaCommentResult, undefined>(error)
     }
 }
+
+// qna 작성
+export type postWriteQnaResult = {
+    qnaIdx : number
+}
+
+export const postWriteQna = async (title : string, content : string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/qna`, {title : title, content : content},  {headers : {Authorization: `Bearer ${accessToken}`}})
+        return toApiBaseResponse<postWriteQnaResult, undefined>(response)
+    } catch(error) {
+        return toApiErrorResponse<postWriteQnaResult, undefined>(error)
+    }
+}
+
+// qna 수정
+export type patchModifyQnaResult = {
+    modified : boolean
+}
+
+export const patchModifyQna = async (title : string, content : string, qnaIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${baseUri}/api/qna/${qnaIdx}`, {title : title, content : content}, {headers : { Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<patchModifyQnaResult, undefined>(response)
+    } catch(error) {
+        return toApiErrorResponse<patchModifyQnaResult, undefined>(error)
+    }
+}
+
+// qna 삭제
+export type deleteQnaResult = {
+    deleted : boolean
+}
+
+export const deleteQna = async(qnaIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.delete(`${baseUri}/api/qna/${qnaIdx}`, {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<deleteQnaResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<deleteQnaResult, undefined>(error)
+    }
+}
