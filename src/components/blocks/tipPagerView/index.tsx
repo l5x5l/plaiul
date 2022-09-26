@@ -22,32 +22,6 @@ const TipPagerView = (props: TipPagerViewProps) => {
     const positionAnimatedValue = useRef(new Animated.Value(0)).current;
     const offsetAnimatedValue = useRef(new Animated.Value(0)).current;
 
-    const [tipList, setTipList] = useState<TipDto[]>([{
-        tipIdx: 0,
-        title: "title 0",
-        thumbnail: "",
-        user: {
-            userIdx: 0,
-            nickname: "userName1"
-        },
-    }, {
-        tipIdx: 1,
-        title: "Color Trap for After Effects",
-        thumbnail: "",
-        user: {
-            userIdx: 0,
-            nickname: "userName1"
-        },
-    }, {
-        tipIdx: 2,
-        title: "title 2",
-        thumbnail: "",
-        user: {
-            userIdx: 0,
-            nickname: "userName2"
-        },
-    }])
-
     if (props.screen === "home") {
         return (
             <View>
@@ -62,13 +36,13 @@ const TipPagerView = (props: TipPagerViewProps) => {
                         useMemo(() =>
                             <View style={{ justifyContent: "flex-end", marginHorizontal: 12 }}>
                                 {
-                                    tipList.map((_, index) => (
+                                    props.tipList.map((_, index) => (
                                         <Leaf isSelected={(index) === activePage} color={theme.colors.text} key={`homeTipCount_${index}`}></Leaf>
                                     ))
                                 }
 
                             </View>
-                            , [tipList, activePage])
+                            , [props.tipList, activePage])
                     }
                     {
                         useMemo(() =>
@@ -88,9 +62,9 @@ const TipPagerView = (props: TipPagerViewProps) => {
                                 }
                             )}>
                                 {
-                                    tipList.map((data, index) => (
+                                    props.tipList.map((data, index) => (
                                         <View style={{ flex: 1 }} collapsable={false} key={`homeTip_${index}`}>
-                                            <Image style={{ flex: 1 }} source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }} />
+                                            <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
                                             <View style={TipPagerViewStyle.imageFilter} />
                                             <View style={TipPagerViewStyle.tipTextArea}>
                                                 <Text numberOfLines={2} style={[textStyle.headline2, { color: '#D9CCB9' }]}>{data.title}</Text>
@@ -100,7 +74,7 @@ const TipPagerView = (props: TipPagerViewProps) => {
                                     ))
                                 }
                             </AnimagedPagerView>
-                            , [tipList])
+                            , [props.tipList])
                     }
                 </View>
             </View>
@@ -112,19 +86,19 @@ const TipPagerView = (props: TipPagerViewProps) => {
                 <View style={[TipPagerViewStyle.rowContainer, {justifyContent : "space-between"}]}>
                     <View style={{flexDirection : "row", alignItems : "flex-end"}}>
                         <Text style={[textStyle.headline2, { color: theme.colors.text, marginStart: 16 }]}>BestTip</Text>
-                        <Text style={[textStyle.body3, { color: theme.colors.text, marginStart : 8 }]}>{`${activePage + 1}/${tipList.length}`}</Text>
+                        <Text style={[textStyle.body3, { color: theme.colors.text, marginStart : 8 }]}>{`${activePage + 1}/${props.tipList.length}`}</Text>
                     </View>
                     {
                         useMemo(() =>
                             <View style={{ alignSelf: "flex-end", marginHorizontal: 12, flexDirection : "row" }}>
                                 {
-                                    tipList.map((_, index) => (
+                                    props.tipList.map((_, index) => (
                                         <Leaf isSelected={(index) === activePage} color={theme.colors.text} key={`homeTipCount_${index}`}></Leaf>
                                     ))
                                 }
 
                             </View>
-                            , [tipList, activePage])
+                            , [props.tipList, activePage])
                     }
                 </View>
                 <View style={{ marginTop: 16, paddingHorizontal : 16 }}>
@@ -146,9 +120,9 @@ const TipPagerView = (props: TipPagerViewProps) => {
                                 }
                             )}>
                                 {
-                                    tipList.map((data, index) => (
+                                    props.tipList.map((data, index) => (
                                         <View style={{ width : "100%", height : "100%",  borderColor : theme.colors.border, borderWidth : 2 }} collapsable={false} key={`Tip_${index}`}>
-                                            <Image style={{ flex: 1 }} source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }} />
+                                            <Image style={{ flex: 1 }} source={{ uri: data.thumbnail }} />
                                             <View style={TipPagerViewStyle.imageFilter} />
                                             <View style={TipPagerViewStyle.tipTextArea_growerTip}>
                                                 <Text numberOfLines={2} style={[textStyle.headline1, { color: '#D9CCB9', marginBottom : 32}]}>{data.title}</Text>
@@ -158,7 +132,7 @@ const TipPagerView = (props: TipPagerViewProps) => {
                                     ))
                                 }
                             </AnimagedPagerView>
-                            , [tipList])
+                            , [props.tipList])
                     }
                 </View>
             </View>

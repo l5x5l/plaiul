@@ -5,6 +5,7 @@ import postListSlice from "./story/postListSlice";
 import storySlice from "./story/storySlice";
 import qnaSlice from "./qna/qnaSlice";
 import LoginSlice from "./login/loginSlice";
+import tipListSlice from "./tip/tipListSlice";
 
 export const store = configureStore({
     reducer : {
@@ -13,7 +14,8 @@ export const store = configureStore({
         signup : signUpSlice.reducer,
         commentList : commentSlice.reducer,
         qna : qnaSlice.reducer,
-        login : LoginSlice.reducer
+        login : LoginSlice.reducer,
+        tipList : tipListSlice.reducer
     }
 })
 
