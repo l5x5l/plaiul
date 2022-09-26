@@ -24,7 +24,7 @@ import { QnaEditScreen } from './src/components/pages/qnaEdit';
 import { StoryScreen } from './src/components/pages/story';
 import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { StoryEditScreen } from './src/components/pages/storyEdit';
-import { TipDetailScreen } from './src/components/pages/tip';
+import { TipDetailScreen } from './src/components/pages/tipDetail';
 import { store } from './src/redux/store';
 import { RootStackParamList } from './src/type/navigate/types';
 import { Theme } from './src/type/theme';

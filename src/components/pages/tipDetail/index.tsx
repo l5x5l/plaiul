@@ -22,10 +22,26 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
 
     const loadTipDetail = async () => {
         const response = await callNeedLoginApi<TipDeatilDto, any>(() => getTipDetail(route.params.tipIdx))
-        console.log(JSON.stringify(response))
         if (response?.data)
             setTipDetail(response.data)
     }
+
+    // const toggleLike = async () => {
+    //     const response = await callNeedLoginApi<patchToggleLikeResult, any>(()=> patchToggleTipLike(route.params.tipIdx))
+    //     console.log(JSON.stringify(response))
+    //     if (response?.data && tipDetail) {
+    //         const temp = {...tipDetail}
+    //         temp.isLiked = response.data.isLiked
+    //         if (temp.isLiked) {
+    //             temp.likeCnt += 1
+    //         } else {
+    //             temp.likeCnt -= 1
+    //         }
+
+    //         setTipDetail(temp)
+            
+    //     }
+    // }
 
     useEffect(() => {
         loadTipDetail()
@@ -72,7 +88,7 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                         <Pressable style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }} onPress={async () => {
                             const isLogin = await checkIsLogin()
                             if (isLogin) {
-                             
+                                //toggleLike()
                             } else {
                                 dispatch(loginAction.callBottomSheet())
                             }
