@@ -52,3 +52,18 @@ export const patchToggleTipLike = async (tipIdx : number) => {
         return toApiErrorResponse<patchToggleLikeResult, undefined>(error)
     }
 }
+
+// tip 작성
+export type postWriteTipResult = {
+    tipIdx : number
+}
+
+export const postWriteTip = async (body : FormData) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}`, body, {headers : {"content-type" : "multipart/form-data",  Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<postWriteTipResult, undefined>(response)
+    } catch(error) {
+        return toApiErrorResponse<postWriteTipResult, undefined>(error)
+    }
+}

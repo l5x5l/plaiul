@@ -1,5 +1,6 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { TipDeatilDto } from "../DTO/tipDto";
 
 type RootStackParamList = {
     Main : undefined,
@@ -11,7 +12,9 @@ type RootStackParamList = {
     },
     LoginHome : undefined,
     Tip : {
-        tipIdx : number
+        tipIdx : number,
+        preview ?: boolean,
+        tip ?: TipDeatilDto
     },
     StoryEdit : {
         storyIdx ?: number
@@ -21,6 +24,9 @@ type RootStackParamList = {
     },
     QnaEdit : {
         qnaIdx ?: number
+    },
+    TipEdit : {
+        tipIdx ?: number
     }
 }
 
@@ -32,6 +38,7 @@ type storyCommentScreenProps = NativeStackScreenProps<RootStackParamList, "Story
 type storyEditScreenProps = NativeStackScreenProps<RootStackParamList, "StoryEdit">
 type qnaScreenProps = NativeStackScreenProps<RootStackParamList, "Qna">
 type qnaEditScreenProps = NativeStackScreenProps<RootStackParamList, "QnaEdit">
+type tipEditScreenProps = NativeStackScreenProps<RootStackParamList, "TipEdit">
 
 
 type LoginParamList = {
@@ -62,6 +69,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps,
     LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}

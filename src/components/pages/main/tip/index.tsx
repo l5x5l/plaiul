@@ -1,12 +1,14 @@
 import { useTheme } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useRef } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import LoginSlice from "../../../../redux/login/loginSlice";
 import { rootState, rootDispatch } from "../../../../redux/store";
 import { loadBestTip, loadTip, tipListSliceState } from "../../../../redux/tip/tipListSlice";
 import textStyle from "../../../../style/textStyle";
 import { RootStackParamList } from "../../../../type/navigate/types";
+import { checkIsLogin } from "../../../../util/token";
 import { TipPagerView } from "../../../blocks/tipPagerView";
 import  TipView  from "../../../blocks/tipView";
 
@@ -22,6 +24,7 @@ const TipScreen = (props : TipScreenProps) => {
 
     const tipListInfo = useSelector<rootState, tipListSliceState>(state => state.tipList)
     const dispatch = useDispatch<rootDispatch>()
+    const loginAction = LoginSlice.actions
 
 
     useEffect(() => {
@@ -53,6 +56,18 @@ const TipScreen = (props : TipScreenProps) => {
                 </View>
             } overScrollMode={"never"}
             onEndReachedThreshold={0.8} onEndReached={setPages}/>
+            <Pressable style={{ position: "absolute", bottom: 16, right: 16 }} onPress={async () => {
+                const isLogin = await checkIsLogin()
+                if (isLogin) {
+                    props.navigation.push("TipEdit", {})
+                } else {
+                    dispatch(loginAction.callBottomSheet())
+                }
+            }}>
+                <View style={{ height: 60, width: 60, borderRadius: 30, backgroundColor: colors.card, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={[textStyle.headline1, { color: colors.text }]}>+</Text>
+                </View>
+            </Pressable>
         </View>
     )
 }
