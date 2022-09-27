@@ -1,6 +1,9 @@
 import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import commentSlice from "../../../redux/comment/commentSlice";
+import { rootDispatch, rootState } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { CommentDto } from "../../../type/DTO/commentDto";
 import { RecommentView } from "../reCommentView/RecommentView";
@@ -12,6 +15,9 @@ export declare type CommentViewType = {
 const CommentView = (props: CommentViewType) => {
 
     const { colors } = useTheme()
+    const replyIdx = useSelector<rootState, number | undefined>(state=>state.commentList.targetReplyIdx)
+    const dispatch = useDispatch<rootDispatch>()
+    const action = commentSlice.actions
 
     return (
         <View style={{ flex: 1 }}>
@@ -22,8 +28,8 @@ const CommentView = (props: CommentViewType) => {
                     <Text style={[textStyle.body2, { color: colors.text, marginTop: 8 }]}>{props.Comment.content}</Text>
                     <View style={{ flexDirection: "row", marginTop: 8 }}>
                         <Text style={[textStyle.body3, { color: colors.text }]}>{props.Comment.createdAt}</Text>
-                        <Pressable style={{ paddingHorizontal: 16 }}>
-                            <Text style={[textStyle.body3, { color: colors.text, marginStart: 16 }]}>답글</Text>
+                        <Pressable style={{ paddingHorizontal: 16 }} onPress={() => {dispatch(action.setReplyComment(props.Comment.commentIdx))}}>
+                            <Text style={[textStyle.body3, { color: colors.text, marginStart: 16 }]}>{ replyIdx === props.Comment.commentIdx ? "답글 취소" : "답글"}</Text>
                         </Pressable>
                     </View>
                 </View>

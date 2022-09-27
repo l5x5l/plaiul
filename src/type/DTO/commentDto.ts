@@ -2,7 +2,7 @@ import { RecommentDto } from "./reCommentDto"
 import { DefaultUserDto, UserDto } from "./userDto"
 
 export declare type CommentDto = {
-    commentIdx : Number,
+    commentIdx : number,
     content : String,
     createdAt : String,
     isWriter : Boolean,

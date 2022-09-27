@@ -51,7 +51,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
     }
 
     async function sendComment() {
-        const result = await callNeedLoginApi<postQnaCommentResult, any>(() => postWriteQnaComment(writingComment, route.params.qnaIdx, commentListInfo.targetRepltIdx))
+        const result = await callNeedLoginApi<postQnaCommentResult, any>(() => postWriteQnaComment(writingComment, route.params.qnaIdx, commentListInfo.targetReplyIdx))
         if (result?.data) {
             // refresh 구현 필요
             setWritingComment("")

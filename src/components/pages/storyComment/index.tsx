@@ -34,7 +34,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
     }
 
     async function sendComment() {
-        const result = await callNeedLoginApi<postStoryCommentResult, any>(() => postWriteStoryComment(writingComment, route.params.storyIdx, commentListInfo.targetRepltIdx))
+        const result = await callNeedLoginApi<postStoryCommentResult, any>(() => postWriteStoryComment(writingComment, route.params.storyIdx, commentListInfo.targetReplyIdx))
         if (result?.data) {
             setWritingComment("")
             refresh()

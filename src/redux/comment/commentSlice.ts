@@ -9,7 +9,7 @@ export interface commentSliceState {
     isLoading: boolean,
     data: CommentDto[],
     cursor?: string,
-    targetRepltIdx?: number,
+    targetReplyIdx?: number,
     isLast: boolean,
     postType: "story" | "qna",
     postIdx: number
@@ -54,10 +54,18 @@ const commentSlice = createSlice({
             state.cursor = undefined
             state.data = []
             state.isLast = false
+            state.targetReplyIdx = undefined
         },
         refresh : (state) => {
             state.cursor = undefined
             state.isLast = false
+            state.targetReplyIdx = undefined
+        },
+        setReplyComment : (state, action : PayloadAction<number|undefined>) => {
+            if (state.targetReplyIdx !== action.payload)
+                state.targetReplyIdx = action.payload
+            else
+                state.targetReplyIdx = undefined
         }
     },
     extraReducers: (builder) => {
