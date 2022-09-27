@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { getQna } from "../../api/qna"
+import { getQna, patchToggleQnaLike } from "../../api/qna"
+import { patchToggleLikeResult } from "../../api/stories"
 import { DefaultQnaDto, QnaDto } from "../../type/DTO/qnaDto"
 import callNeedLoginApi from "../../util/callNeedLogin"
 
@@ -11,6 +12,10 @@ export interface qnaSliceState {
 
 export const loadQna = createAsyncThunk("qna/loadByIdx", async (qnaIdx : number) => {
     return await callNeedLoginApi(()=>getQna(qnaIdx))
+})
+
+export const toggleQnaLike = createAsyncThunk("story/like", async (qnaIdx : number) => {
+    return await callNeedLoginApi<patchToggleLikeResult, any>(() => patchToggleQnaLike(qnaIdx))
 })
 
 const initialState : qnaSliceState = {
@@ -51,6 +56,16 @@ const qnaSlice = createSlice({
         builder.addCase(loadQna.rejected, (state, action) => {
             state.isError = true,
             state.isLoading = false
+        }),
+        builder.addCase(toggleQnaLike.fulfilled, (state, action) => {
+            if (action.payload?.data) {
+                state.value.isLiked = action.payload.data.isLiked
+                if (action.payload.data.isLiked === true){
+                    state.value.likeCnt += 1
+                } else {
+                    state.value.likeCnt -= 1
+                }
+            }
         })
     }
 })

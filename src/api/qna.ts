@@ -3,6 +3,7 @@ import { toApiBaseResponse, toApiErrorResponse } from "."
 import { CommentDto } from "../type/DTO/commentDto"
 import { QnaDto } from "../type/DTO/qnaDto"
 import { getAccessToken } from "../util/token"
+import { patchToggleLikeResult } from "./stories"
 
 const baseUri = "http://15.164.214.109"
 
@@ -97,5 +98,17 @@ export const deleteQna = async(qnaIdx : number) => {
         return toApiBaseResponse<deleteQnaResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<deleteQnaResult, undefined>(error)
+    }
+}
+
+
+// 좋아요 변경
+export const patchToggleQnaLike = async (qnaIdx: number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${baseUri}/api/qna/${qnaIdx}/like`, {}, { headers: { Authorization: `Bearer ${accessToken}` } });
+        return toApiBaseResponse<patchToggleLikeResult, undefined>(response);
+    } catch (error) {
+        return toApiErrorResponse<patchToggleLikeResult, undefined>(error);
     }
 }
