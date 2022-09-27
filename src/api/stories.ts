@@ -1,7 +1,6 @@
 import axios from "axios";
-import { toApiBaseResponse, toApiErrorResponse } from ".";
+import { reportResult, toApiBaseResponse, toApiErrorResponse } from ".";
 import { CommentDto } from "../type/DTO/commentDto";
-import { QnaDto } from "../type/DTO/qnaDto";
 import { StoryDto } from "../type/DTO/storyDto";
 import { getAccessToken } from "../util/token";
 
@@ -119,5 +118,27 @@ export const deleteStory = async (storyIdx : number) => {
         return toApiBaseResponse<deleteStoryResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<deleteStoryResult, undefined>(error)
+    }
+}
+
+// 스토리 댓글 신고
+export const reportStoryComment = async (storyIdx : number, commentIdx : number, reasonIdx : number, reason ?: string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/comments/${commentIdx}/report`, { reasonIdx : reasonIdx, reason : reason }, {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<reportResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<reportResult, undefined>(error)
+    }
+}
+
+// 스토리 신고
+export const reportStory = async(storyIdx : number, reasonIdx : number, reason ?: string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/report`, { reasonIdx : reasonIdx, reason : reason }, {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<reportResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<reportResult, undefined>(error)
     }
 }

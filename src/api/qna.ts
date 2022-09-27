@@ -1,5 +1,5 @@
 import axios from "axios"
-import { toApiBaseResponse, toApiErrorResponse } from "."
+import { reportResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { CommentDto } from "../type/DTO/commentDto"
 import { QnaDto } from "../type/DTO/qnaDto"
 import { getAccessToken } from "../util/token"
@@ -110,5 +110,27 @@ export const patchToggleQnaLike = async (qnaIdx: number) => {
         return toApiBaseResponse<patchToggleLikeResult, undefined>(response);
     } catch (error) {
         return toApiErrorResponse<patchToggleLikeResult, undefined>(error);
+    }
+}
+
+// qna 댓글 신고
+export const reportQnaComment = async (qnaIdx : number, commentIdx : number, reasonIdx : number, reason ?: string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/qna/${qnaIdx}/comments/${commentIdx}/report`, { reasonIdx : reasonIdx, reason : reason }, {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<reportResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<reportResult, undefined>(error)
+    }
+}
+
+// qna 신고
+export const reportQna = async(qnaIdx : number, reasonIdx : number, reason ?: string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.post(`${baseUri}/api/qna/${qnaIdx}/report`, { reasonIdx : reasonIdx, reason : reason }, {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<reportResult, undefined>(response)
+    } catch (error : any) {
+        return toApiErrorResponse<reportResult, undefined>(error)
     }
 }

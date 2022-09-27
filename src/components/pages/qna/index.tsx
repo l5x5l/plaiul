@@ -29,16 +29,16 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
     const dispatch = useDispatch<rootDispatch>()
     const loginAction = LoginSlice.actions
     const commentAction = commentSlice.actions
-    const isQnaWriter = useSelector<rootState, boolean>(state=> state.qna.value.isWriter)
+    const isQnaWriter = useSelector<rootState, boolean>(state => state.qna.value.isWriter)
 
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
-    
+
     useEffect(() => {
         dispatch(commentAction.setPostType("qna"))
         dispatch(commentAction.setBasePost(route.params.qnaIdx))
         setData()
-        
+
         return () => {
             dispatch(commentAction.clear())
         }
@@ -56,7 +56,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
             // refresh 구현 필요
             setWritingComment("")
             dispatch(commentAction.refresh())
-            dispatch(loadCommentList({postIdx : route.params.qnaIdx, cursor : undefined, category : "qna"}))
+            dispatch(loadCommentList({ postIdx: route.params.qnaIdx, cursor: undefined, category: "qna" }))
         }
     }
 
@@ -87,9 +87,9 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                         () => { setData() }
                     } refreshing={isRefresh} onRefresh={() => {
                         dispatch(commentAction.refresh())
-                        dispatch(loadCommentList({postIdx : route.params.qnaIdx, cursor : undefined, category : "qna"}))
+                        dispatch(loadCommentList({ postIdx: route.params.qnaIdx, cursor: undefined, category: "qna" }))
                         setIsRefresh(false)
-                        }}/>
+                    }} />
 
                 <View>
                     <Line />
@@ -119,7 +119,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                 <View style={{ paddingHorizontal: 16 }}>
                                     <TextButton text={"수정하기"} onPress={() => {
                                         setBottomSheetShow(false)
-                                        navigation.push("QnaEdit", {qnaIdx : route.params.qnaIdx})
+                                        navigation.push("QnaEdit", { qnaIdx: route.params.qnaIdx })
                                     }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
@@ -128,7 +128,15 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                     }} paddingVertical={16} />
                                 </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"신고하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"신고하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            navigation.push("Report", {targetIdx : route.params.qnaIdx, category : "qna"})
+                                        } else {
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
                                 </View>

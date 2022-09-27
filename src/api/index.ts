@@ -28,3 +28,7 @@ export function toApiErrorResponse<T, G>(error: any) {
     else
         throw error
 }
+
+export type reportResult = {
+    reported : boolean
+}

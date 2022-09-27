@@ -112,7 +112,15 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                                     }} paddingVertical={16} />
                                 </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"신고하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"신고하기"} onPress={async () => { 
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            navigation.push("Report", {targetIdx : route.params.storyIdx, category : "story"})
+                                        } else {
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
                                     <Line />
                                     <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
                                 </View>
@@ -125,7 +133,6 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                 if (response?.data?.deleted) {
                     navigation.goBack()
                 }
-                console.log("삭제!")
             }} isShow={modalShow} setIsShow={setModalShow} />
         </SafeAreaView>
 

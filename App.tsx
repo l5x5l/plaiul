@@ -21,6 +21,7 @@ import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
 import { QnaScreen } from './src/components/pages/qna';
 import { QnaEditScreen } from './src/components/pages/qnaEdit';
+import { ReportScreen } from './src/components/pages/report';
 import { StoryScreen } from './src/components/pages/story';
 import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { StoryEditScreen } from './src/components/pages/storyEdit';
@@ -51,6 +52,7 @@ const App = () => {
                 <Stack.Screen name="QnaEdit" component={QnaEditScreen}/>
                 <Stack.Screen name="Tip" component={TipDetailScreen}/>
                 <Stack.Screen name="TipEdit" component={TipEditScreen}/>
+                <Stack.Screen name="Report" component={ReportScreen}/>
               </Stack.Navigator>
             ), [])
           }
