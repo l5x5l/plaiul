@@ -23,8 +23,7 @@ export type getTipResultMeta = {
 
 export const getTip = async (nextCursor?: string) => {
     try {
-        const accessToken = await getAccessToken()
-        const response = await axios.get(`${baseUri}`, { params: { cursor: nextCursor }, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
+        const response = await axios.get(`${baseUri}`, { params: { cursor: nextCursor }})
         return toApiBaseResponse<TipDto[], getTipResultMeta>(response)
     } catch (error) {
         return toApiErrorResponse<TipDto[], getTipResultMeta>(error)
