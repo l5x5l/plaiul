@@ -32,6 +32,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
     const isQnaWriter = useSelector<rootState, boolean>(state=> state.qna.value.isWriter)
 
     const [writingComment, setWritingComment] = useState("")
+    const [isRefresh, setIsRefresh] = useState(false)
     
     useEffect(() => {
         dispatch(commentAction.setPostType("qna"))
@@ -45,7 +46,6 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
 
     function setData() {
         if (!commentListInfo.isLast) {
-            console.log(`${commentListInfo.cursor}`)
             dispatch(loadCommentList({ postIdx: route.params.qnaIdx, cursor: commentListInfo.cursor, category: "qna" }))
         }
     }
@@ -55,6 +55,8 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
         if (result?.data) {
             // refresh 구현 필요
             setWritingComment("")
+            dispatch(commentAction.refresh())
+            dispatch(loadCommentList({postIdx : route.params.qnaIdx, cursor : undefined, category : "qna"}))
         }
     }
 
@@ -83,7 +85,11 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                     }
                     onEndReachedThreshold={0.8} onEndReached={
                         () => { setData() }
-                    } />
+                    } refreshing={isRefresh} onRefresh={() => {
+                        dispatch(commentAction.refresh())
+                        dispatch(loadCommentList({postIdx : route.params.qnaIdx, cursor : undefined, category : "qna"}))
+                        setIsRefresh(false)
+                        }}/>
 
                 <View>
                     <Line />

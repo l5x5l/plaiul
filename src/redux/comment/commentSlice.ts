@@ -54,6 +54,10 @@ const commentSlice = createSlice({
             state.cursor = undefined
             state.data = []
             state.isLast = false
+        },
+        refresh : (state) => {
+            state.cursor = undefined
+            state.isLast = false
         }
     },
     extraReducers: (builder) => {

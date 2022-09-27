@@ -42,7 +42,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
     }
 
     function refresh() {
-        store.dispatch(action.clear())
+        store.dispatch(action.refresh())
         dispatch(loadCommentList({postIdx : route.params.storyIdx, cursor : undefined, category : "story"}))
         setIsRefresh(false)
     }
@@ -62,7 +62,6 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
                 <BackButton margin={4} onPress={() => {
-                    store.dispatch(action.clear())
                     navigation.goBack()
                 }} />
                 <FlatList keyExtractor={item => `${commentListInfo.postIdx}_comment${item.commentIdx}`} style={{ flex: 1 }} data={commentListInfo.data} renderItem={({ item }) => <CommentView Comment={item} />}
