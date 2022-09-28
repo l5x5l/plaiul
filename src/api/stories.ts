@@ -1,5 +1,5 @@
 import axios from "axios";
-import { reportResult, toApiBaseResponse, toApiErrorResponse } from ".";
+import { deleteResult, reportResult, toApiBaseResponse, toApiErrorResponse } from ".";
 import { CommentDto } from "../type/DTO/commentDto";
 import { StoryDto } from "../type/DTO/storyDto";
 import { getAccessToken } from "../util/token";
@@ -140,5 +140,16 @@ export const reportStory = async(storyIdx : number, reasonIdx : number, reason ?
         return toApiBaseResponse<reportResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<reportResult, undefined>(error)
+    }
+}
+
+// 스토리 댓글 삭제
+export const deleteStoryComment = async(storyIdx : number, commentIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.delete(`${baseUri}/api/stories/${storyIdx}/comments/${commentIdx}`,  {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<deleteResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<deleteResult, undefined>(error)
     }
 }

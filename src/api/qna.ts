@@ -1,5 +1,5 @@
 import axios from "axios"
-import { reportResult, toApiBaseResponse, toApiErrorResponse } from "."
+import { deleteResult, reportResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { CommentDto } from "../type/DTO/commentDto"
 import { QnaDto } from "../type/DTO/qnaDto"
 import { getAccessToken } from "../util/token"
@@ -132,5 +132,16 @@ export const reportQna = async(qnaIdx : number, reasonIdx : number, reason ?: st
         return toApiBaseResponse<reportResult, undefined>(response)
     } catch (error : any) {
         return toApiErrorResponse<reportResult, undefined>(error)
+    }
+}
+
+// qna 댓글 삭제
+export const deleteQnaComment = async(qnaIdx : number, commentIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.delete(`${baseUri}/api/qna/${qnaIdx}/comments/${commentIdx}`,  {headers : {Authorization : `Bearer ${accessToken}`}})
+        return toApiBaseResponse<deleteResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<deleteResult, undefined>(error)
     }
 }

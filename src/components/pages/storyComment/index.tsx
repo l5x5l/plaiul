@@ -4,7 +4,7 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { postStoryCommentResult, postWriteStoryComment } from "../../../api/stories";
+import { deleteStoryComment, postStoryCommentResult, postWriteStoryComment } from "../../../api/stories";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState, store } from "../../../redux/store";
@@ -14,7 +14,10 @@ import callNeedLoginApi from "../../../util/callNeedLogin";
 import { checkIsLogin } from "../../../util/token";
 import { BackButton } from "../../atoms/backButton";
 import { Line } from "../../atoms/line";
+import { TextButton } from "../../atoms/textButton";
+import { BottomSheet } from "../../blocks/bottomSheet";
 import { CommentView } from "../../blocks/commentView";
+import { ConfirmModal } from "../../blocks/confirmModal";
 
 const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
     const { colors, dark } = useTheme()
@@ -26,10 +29,12 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
 
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
+    const [bottomSheetShow, setBottomSheetShow] = useState(false)
+    const [modalShow, setModalShow] = useState(false)
 
     function setData() {
         if (!commentListInfo.isLast) {
-            dispatch(loadCommentList({ postIdx: route.params.storyIdx, cursor: commentListInfo.cursor, category : "story"}))
+            dispatch(loadCommentList({ postIdx: route.params.storyIdx, cursor: commentListInfo.cursor, category: "story" }))
         }
     }
 
@@ -43,9 +48,14 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
 
     function refresh() {
         store.dispatch(action.refresh())
-        dispatch(loadCommentList({postIdx : route.params.storyIdx, cursor : undefined, category : "story"}))
+        dispatch(loadCommentList({ postIdx: route.params.storyIdx, cursor: undefined, category: "story" }))
         setIsRefresh(false)
     }
+
+    // comment 신고/수정에 관한 bottomSheet 의 표시 여부는 commentSlice 의 moreButtonTargetComment 의 유무에 따라 결정됩니다!
+    useEffect(() => {
+        setBottomSheetShow(commentListInfo.moreButtonTargetComment !== undefined)
+    }, [commentListInfo.moreButtonTargetComment])
 
     useEffect(() => {
         store.dispatch(action.clear())
@@ -55,6 +65,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
 
         return () => {
             store.dispatch(action.clear())
+            store.dispatch(action.setMoreButtonComment(undefined))
         }
     }, [])
 
@@ -65,7 +76,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                     navigation.goBack()
                 }} />
                 <FlatList keyExtractor={item => `${commentListInfo.postIdx}_comment${item.commentIdx}`} style={{ flex: 1 }} data={commentListInfo.data} renderItem={({ item }) => <CommentView Comment={item} />}
-                    onEndReachedThreshold={0.8} onEndReached={() => { setData() }} onRefresh={() => {refresh()}} refreshing={isRefresh}
+                    onEndReachedThreshold={0.8} onEndReached={() => { setData() }} onRefresh={() => { refresh() }} refreshing={isRefresh}
                 />
                 <View>
                     <Line />
@@ -78,15 +89,62 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                             } else {
                                 dispatch(loginAction.callBottomSheet())
                             }
-                            
                         }}>
-                            <View style={{ backgroundColor: colors.border, flex : 1, alignItems : "center", justifyContent : "center" }}>
+                            <View style={{ backgroundColor: colors.border, flex: 1, alignItems: "center", justifyContent: "center" }}>
                                 <Text style={[{ paddingHorizontal: 16, color: colors.background }, textStyle.body2]}>등록</Text>
                             </View>
                         </Pressable>
                     </View>
                 </View>
             </View>
+            <View style={{ position: "absolute", bottom: 0, height: "100%" }}>
+                <BottomSheet children={
+                    <View style={{ width: "100%", paddingVertical: 40 }}>
+                        {
+                            (commentListInfo.moreButtonTargetComment?.isUserComment) ?
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"삭제하기"} onPress={() => {
+                                        setBottomSheetShow(false)
+                                        setModalShow(true)
+                                    }} paddingVertical={16} />
+                                </View> :
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"신고하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            navigation.push("Report", { targetIdx: route.params.storyIdx, category: "story", targetCommentIdx: commentListInfo.moreButtonTargetComment?.commentIdx })
+                                        } else {
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
+                                    <Line />
+                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                </View>
+                        }
+                    </View>
+                } isShow={bottomSheetShow} setIsShow={(isShow) => {
+                    if (isShow) {
+                        setBottomSheetShow(true)
+                    } else {
+                        dispatch(action.setMoreButtonComment(undefined))
+                    }
+                }} />
+            </View>
+            <ConfirmModal mainText={"댓글을\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
+                if (commentListInfo.moreButtonTargetComment) {
+                    const response = await callNeedLoginApi(() => deleteStoryComment(route.params.storyIdx, commentListInfo.moreButtonTargetComment!!.commentIdx))
+
+                    if (response?.data?.deleted) {
+                        refresh()
+                    }
+                }
+            }} isShow={modalShow} setIsShow={(isShow) => {
+                if (!isShow) {
+                    dispatch(action.setMoreButtonComment(undefined))
+                }
+                setModalShow(isShow)
+            }} />
         </SafeAreaView>
     )
 }

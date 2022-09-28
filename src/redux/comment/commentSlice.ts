@@ -12,7 +12,8 @@ export interface commentSliceState {
     targetReplyIdx?: number,
     isLast: boolean,
     postType: "story" | "qna",
-    postIdx: number
+    postIdx: number,
+    moreButtonTargetComment ?: CommentDto
 }
 
 const initialState: commentSliceState = {
@@ -36,7 +37,6 @@ export const loadCommentList = createAsyncThunk("comment/loadListByCursor", asyn
     } else {
         return await callNeedLoginApi<CommentDto[], any>(() => getQnaCommentList(pageParam.postIdx, pageParam.cursor))
     }
-    
 })
 
 const commentSlice = createSlice({
@@ -66,6 +66,13 @@ const commentSlice = createSlice({
                 state.targetReplyIdx = action.payload
             else
                 state.targetReplyIdx = undefined
+        },
+        setMoreButtonComment : (state, action : PayloadAction<CommentDto | undefined>) =>  {
+            if (state.moreButtonTargetComment?.commentIdx === action.payload?.commentIdx){
+                state.moreButtonTargetComment = undefined
+            } else {
+                state.moreButtonTargetComment = action.payload
+            }
         }
     },
     extraReducers: (builder) => {

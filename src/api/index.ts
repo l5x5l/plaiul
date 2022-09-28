@@ -32,3 +32,7 @@ export function toApiErrorResponse<T, G>(error: any) {
 export type reportResult = {
     reported : boolean
 }
+
+export type deleteResult = {
+    deleted : boolean
+}

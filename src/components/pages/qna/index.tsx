@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteQna, postQnaCommentResult, postWriteQnaComment } from "../../../api/qna";
+import { deleteQna, deleteQnaComment, postQnaCommentResult, postWriteQnaComment } from "../../../api/qna";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState } from "../../../redux/store";
@@ -34,6 +34,9 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
 
+    const [commentBottomSheetShow, setCommentBottomSheetShow] = useState(false)
+    const [commentModalShow, setCommentModalShow] = useState(false)
+
     useEffect(() => {
         dispatch(commentAction.setPostType("qna"))
         dispatch(commentAction.setBasePost(route.params.qnaIdx))
@@ -41,8 +44,13 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
 
         return () => {
             dispatch(commentAction.clear())
+            dispatch(commentAction.setMoreButtonComment(undefined))
         }
     }, [])
+
+    useEffect(() => {
+        setCommentBottomSheetShow(commentListInfo.moreButtonTargetComment !== undefined)
+    }, [commentListInfo.moreButtonTargetComment])
 
     function setData() {
         if (!commentListInfo.isLast) {
@@ -132,7 +140,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                         const isLogin = await checkIsLogin()
                                         if (isLogin) {
                                             setBottomSheetShow(false)
-                                            navigation.push("Report", {targetIdx : route.params.qnaIdx, category : "qna"})
+                                            navigation.push("Report", { targetIdx: route.params.qnaIdx, category: "qna" })
                                         } else {
                                             dispatch(loginAction.callBottomSheet())
                                         }
@@ -147,6 +155,56 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
             <ConfirmModal mainText={"qna를\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
                 removeQna()
             }} isShow={modalShow} setIsShow={setModalShow} />
+
+            <View key={"commentBottomSheet"} style={{ position: "absolute", bottom: 0, height: "100%" }}>
+                <BottomSheet children={
+                    <View style={{ width: "100%", paddingVertical: 40 }}>
+                        {
+                            (commentListInfo.moreButtonTargetComment?.isUserComment) ?
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"삭제하기"} onPress={() => {
+                                        setCommentBottomSheetShow(false)
+                                        setCommentModalShow(true)
+                                    }} paddingVertical={16} />
+                                </View> :
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"신고하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setCommentBottomSheetShow(false)
+                                            navigation.push("Report", { targetIdx: route.params.qnaIdx, category: "qna", targetCommentIdx: commentListInfo.moreButtonTargetComment?.commentIdx })
+                                        } else {
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
+                                    <Line />
+                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                </View>
+                        }
+                    </View>
+                } isShow={commentBottomSheetShow} setIsShow={(isShow) => {
+                    if (isShow) {
+                        setCommentBottomSheetShow(true)
+                    } else {
+                        dispatch(commentAction.setMoreButtonComment(undefined))
+                    }
+                }} />
+            </View>
+            <ConfirmModal key={"commentConfirmModal"} mainText={"댓글을\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
+                if (commentListInfo.moreButtonTargetComment) {
+                    const response = await callNeedLoginApi(() => deleteQnaComment(route.params.qnaIdx, commentListInfo.moreButtonTargetComment!!.commentIdx))
+
+                    if (response?.data?.deleted) {
+                        dispatch(commentAction.refresh())
+                        dispatch(loadCommentList({ postIdx: route.params.qnaIdx, cursor: undefined, category: "qna" }))
+                    }
+                }
+            }} isShow={commentModalShow} setIsShow={(isShow) => {
+                setCommentModalShow(isShow)
+                if (!isShow) {
+                    dispatch(commentAction.setMoreButtonComment(undefined))
+                }
+            }} />
         </SafeAreaView>
     )
 }

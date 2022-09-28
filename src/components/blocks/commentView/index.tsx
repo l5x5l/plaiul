@@ -15,7 +15,7 @@ export declare type CommentViewType = {
 const CommentView = (props: CommentViewType) => {
 
     const { colors } = useTheme()
-    const replyIdx = useSelector<rootState, number | undefined>(state=>state.commentList.targetReplyIdx)
+    const replyIdx = useSelector<rootState, number | undefined>(state => state.commentList.targetReplyIdx)
     const dispatch = useDispatch<rootDispatch>()
     const action = commentSlice.actions
 
@@ -24,19 +24,26 @@ const CommentView = (props: CommentViewType) => {
             <View style={{ flex: 1, flexDirection: "row", padding: 16 }}>
                 <Image source={{ uri: props.Comment.user.profile }} style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: colors.card }} />
                 <View style={{ flex: 1, marginStart: 8 }}>
-                    <Text style={[textStyle.title2, { color: colors.text }]}>{props.Comment.user.nickname}</Text>
+                    <View style={{ flexDirection: "row" , alignItems :"center", justifyContent : "space-between"}}>
+                        <Text style={[textStyle.title2, { color: colors.text }]}>{props.Comment.user.nickname}</Text>
+                        <Pressable onPress={() => {
+                            dispatch(action.setMoreButtonComment(props.Comment))
+                        }}>
+                            <Image source={require("../../../assets/images/more_dot_24.png")} style={{ tintColor: colors.border, width : 24, height : 24}} />
+                        </Pressable>
+                    </View>
                     <Text style={[textStyle.body2, { color: colors.text, marginTop: 8 }]}>{props.Comment.content}</Text>
                     <View style={{ flexDirection: "row", marginTop: 8 }}>
                         <Text style={[textStyle.body3, { color: colors.text }]}>{props.Comment.createdAt}</Text>
-                        <Pressable style={{ paddingHorizontal: 16 }} onPress={() => {dispatch(action.setReplyComment(props.Comment.commentIdx))}}>
-                            <Text style={[textStyle.body3, { color: colors.text, marginStart: 16 }]}>{ replyIdx === props.Comment.commentIdx ? "답글 취소" : "답글"}</Text>
+                        <Pressable style={{ paddingHorizontal: 16 }} onPress={() => { dispatch(action.setReplyComment(props.Comment.commentIdx)) }}>
+                            <Text style={[textStyle.body3, { color: colors.text, marginStart: 16 }]}>{replyIdx === props.Comment.commentIdx ? "답글 취소" : "답글"}</Text>
                         </Pressable>
                     </View>
                 </View>
             </View>
             {
                 props.Comment.reComments.map((reply) => (
-                    <RecommentView recomment={reply} key={`${props.Comment.commentIdx}_reple${reply.commentIdx}`}/>
+                    <RecommentView recomment={reply} key={`${props.Comment.commentIdx}_reple${reply.commentIdx}`} />
                 ))
             }
         </View>
@@ -44,4 +51,4 @@ const CommentView = (props: CommentViewType) => {
     )
 }
 
-export {CommentView}
+export { CommentView }
