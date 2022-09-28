@@ -2,9 +2,12 @@ import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 import { reportResult } from "../../../api";
 import { reportQna, reportQnaComment } from "../../../api/qna";
 import { reportStory, reportStoryComment } from "../../../api/stories";
+import commentSlice from "../../../redux/comment/commentSlice";
+import { rootDispatch } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { reportScreenProps } from "../../../type/navigate/types";
 import callNeedLoginApi from "../../../util/callNeedLogin";
@@ -19,6 +22,8 @@ const ReportScreen = ({ route, navigation }: reportScreenProps) => {
     const [reasonText, setReasonText] = useState("")
 
     const reportReasons = ["욕설 및 비방", "홍보 및 영리목적", "불법 정보", "음란 및 청소년 유해", "개인정보 노출 및 유포", "도배 및 스팸", "직접 작성 (150자 이내)"]
+    const dispatch = useDispatch<rootDispatch>()
+    const action = commentSlice.actions
 
     const checkReportable = () => {
         return (selectedReasonIdx !== undefined && (selectedReasonIdx <= 6 || (selectedReasonIdx === 7 && reasonText !== "")))
@@ -61,6 +66,12 @@ const ReportScreen = ({ route, navigation }: reportScreenProps) => {
             console.log(JSON.stringify(result))
         }
     }
+
+    useEffect(() => {
+        return () => {
+            dispatch(action.setMoreButtonComment(undefined))
+        }
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
