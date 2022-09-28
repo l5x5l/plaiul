@@ -142,6 +142,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                             setBottomSheetShow(false)
                                             navigation.push("Report", { targetIdx: route.params.qnaIdx, category: "qna" })
                                         } else {
+                                            dispatch(commentAction.setMoreButtonComment(undefined))
                                             dispatch(loginAction.callBottomSheet())
                                         }
                                     }} paddingVertical={16} />

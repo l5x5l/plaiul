@@ -115,6 +115,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                                             setBottomSheetShow(false)
                                             navigation.push("Report", { targetIdx: route.params.storyIdx, category: "story", targetCommentIdx: commentListInfo.moreButtonTargetComment?.commentIdx })
                                         } else {
+                                            dispatch(action.setMoreButtonComment(undefined))
                                             dispatch(loginAction.callBottomSheet())
                                         }
                                     }} paddingVertical={16} />

@@ -118,11 +118,14 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                                             setBottomSheetShow(false)
                                             navigation.push("Report", {targetIdx : route.params.storyIdx, category : "story"})
                                         } else {
+                                            setBottomSheetShow(false)
                                             dispatch(loginAction.callBottomSheet())
                                         }
                                     }} paddingVertical={16} />
                                     <Line />
-                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"사용자 차단하기"} onPress={() => {
+                                        
+                                     }} paddingVertical={16} />
                                 </View>
                         }
                     </View>
