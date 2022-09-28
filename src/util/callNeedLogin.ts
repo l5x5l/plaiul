@@ -35,6 +35,8 @@ async function callNeedLoginApi<T, G>(apiCall: () => Promise<apiBaseResponse<T, 
         else if (result.code === 1101) {
             //navigation.navigation.push("LoginHome")
             console.log("호출!")
+        } else if (result.code) { // 기타 서버 에러의 경우
+            return result
         }
     } catch (error) {
         if (repeat) throw error
