@@ -13,7 +13,6 @@ export const getStory = async (id: number) => {
         const data = await axios.get(`${baseUri}/api/stories/${id}`, {headers :  accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined});
         return toApiBaseResponse<StoryDto, undefined>(data)
     } catch (error : any) {
-        console.log(error.response.data);
         return toApiErrorResponse(error)
     }
 }
@@ -36,12 +35,9 @@ export type patchToggleLikeResult = {
 export const patchToggleLike = async (storyIdx: number) => {
     try {
         const accessToken = await getAccessToken()
-        console.log(accessToken)
         const response = await axios.patch(`${baseUri}/api/stories/${storyIdx}/like`, {}, { headers: { Authorization: `Bearer ${accessToken}` } });
-        //console.log(JSON.stringify(toApiBaseResponse<patchToggleLikeResult, undefined>(response)))
         return toApiBaseResponse<patchToggleLikeResult, undefined>(response);
     } catch (error) {
-        //console.log(JSON.stringify(error))
         return toApiErrorResponse<patchToggleLikeResult, undefined>(error);
     }
 }
@@ -70,7 +66,6 @@ export const postWriteStoryComment = async (content : String, storyIdx : Number,
     try {
         const accessToken = await getAccessToken()
         const response = await axios.post(`${baseUri}/api/stories/${storyIdx}/comments`, {parentCommentIdx : parentCommentIdx, content : content}, {headers : {Authorization: `Bearer ${accessToken}`}})
-        console.log(JSON.stringify(response))
         return toApiBaseResponse<postStoryCommentResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<postStoryCommentResult, undefined>(error)

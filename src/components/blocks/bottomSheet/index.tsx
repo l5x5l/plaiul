@@ -60,8 +60,6 @@ const BottomSheet = (props: BottomSheetProps) => {
 
             <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0, 0, 0, 0.4)" }}>
                 <Pressable onPress={() => {
-                    console.log("close!!")
-                    console.log(`height ${bottomSheetHeight.current}`)
                     props.setIsShow(false)
                 }} style={{flex : 1}}>
                     <View style={{ flex: 1 }} />
