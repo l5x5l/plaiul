@@ -4,7 +4,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { patchToggleLikeResult } from "../../../api/stories";
-import { getTipDetail, patchToggleTipLike } from "../../../api/tip";
+import { deleteTip, getTipDetail, patchToggleTipLike } from "../../../api/tip";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
@@ -94,7 +94,6 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                         <View style={TipDetailStyle.contentArea}>
                             {
                                 tipDetail?.content.map((data, index) => {
-                                    console.log(JSON.stringify(data))
                                     return data.type === 1 ? <Text key={`text_${index}`} style={[textStyle.body2, { color: colors.text, marginBottom: 16 }]}>{data.text}</Text> : <Image key={`image_${index}`} source={{ uri: data.image }} style={{ marginBottom: 16, width: "100%", aspectRatio: 1 }} />
                                 })
                             }
@@ -155,10 +154,10 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                 } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
             </View>
             <ConfirmModal mainText={"해당 tip을\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
-                //const response = await callNeedLoginApi(() => deleteStory(route.params.storyIdx))
-                // if (response?.data?.deleted) {
-                //     navigation.goBack()
-                // }
+                const response = await callNeedLoginApi(() => deleteTip(route.params.tipIdx))
+                if (response?.data?.deleted) {
+                    navigation.goBack()
+                }
             }} isShow={modalShow} setIsShow={setModalShow} />
         </SafeAreaView>
     )

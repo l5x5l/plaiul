@@ -1,5 +1,5 @@
 import axios from "axios"
-import { modifyResult, toApiBaseResponse, toApiErrorResponse } from "."
+import { deleteResult, modifyResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { TipDeatilDto, TipDto } from "../type/DTO/tipDto"
 import { getAccessToken } from "../util/token"
 import { patchToggleLikeResult } from "./stories"
@@ -75,5 +75,16 @@ export const patchModifyTip = async (body : FormData, tipIdx : number) => {
         return toApiBaseResponse<modifyResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<modifyResult, undefined>(error)
+    }
+}
+
+// tip 삭제
+export const deleteTip = async (tipIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.delete(`${baseUri}/${tipIdx}`, {headers : {Authorization: `Bearer ${accessToken}`}})
+        return toApiBaseResponse<deleteResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<deleteResult, undefined>(error)
     }
 }
