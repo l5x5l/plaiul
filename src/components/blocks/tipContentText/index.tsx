@@ -7,10 +7,11 @@ interface TipContentTextProps {
     itemId : number,
     changeFunction : (key : number, value : string) => void,
     removeFuction : (key : number) => void,
-    moveFunction : (up : boolean, key : number) => void
+    moveFunction : (up : boolean, key : number) => void,
+    initText ?: string
 }
 
-const TipContentText = ({itemId, changeFunction, removeFuction, moveFunction} : TipContentTextProps) => {
+const TipContentText = ({itemId, changeFunction, removeFuction, moveFunction, initText} : TipContentTextProps) => {
 
     const {colors} = useTheme()
 
@@ -30,7 +31,7 @@ const TipContentText = ({itemId, changeFunction, removeFuction, moveFunction} : 
                     </TouchableOpacity>
                 </View>
             </View>
-            <TextInput style={[tipContentStyle.textInput, textStyle.body2, {color : colors.text}]} multiline={true} onChangeText={(text) => {changeFunction(itemId, text)}} placeholder="input text..."/>
+            <TextInput style={[tipContentStyle.textInput, textStyle.body2, {color : colors.text}]} multiline={true} onChangeText={(text) => {changeFunction(itemId, text)}} placeholder="input text..." defaultValue={initText ? initText  : "" }/>
         </View>
     )
 }

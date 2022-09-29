@@ -26,7 +26,8 @@ type RootStackParamList = {
         qnaIdx ?: number
     },
     TipEdit : {
-        tipIdx ?: number
+        tip ?: TipDeatilDto,
+        modifySuccess ?: () => void
     },
     Report : {
         targetIdx : number,

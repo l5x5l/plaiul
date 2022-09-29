@@ -21,6 +21,7 @@ export declare type TipDeatilDto = {
     likeCnt : number,
     createdAt : string,
     user : UserDto,
+    isWriter : boolean,
     content : TipConetntDto[]
 }
 
@@ -31,6 +32,7 @@ export const DefaultTipDeatilDto : TipDeatilDto = {
     isLiked : false,
     likeCnt : 0,
     createdAt : "",
+    isWriter : false,
     user : DefaultUserDto,
     content : []
 }

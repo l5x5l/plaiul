@@ -14,12 +14,18 @@ import callNeedLoginApi from "../../../util/callNeedLogin";
 import { checkIsLogin } from "../../../util/token";
 import { BackButton } from "../../atoms/backButton";
 import { Line } from "../../atoms/line";
+import { MoreButton } from "../../atoms/moreButton";
+import { TextButton } from "../../atoms/textButton";
+import { BottomSheet } from "../../blocks/bottomSheet";
+import { ConfirmModal } from "../../blocks/confirmModal";
 
 const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
     const { colors } = useTheme();
     const [tipDetail, setTipDetail] = useState<TipDeatilDto>()
     const dispatch = useDispatch<rootDispatch>()
     const loginAction = LoginSlice.actions
+    const [bottomSheetShow, setBottomSheetShow] = useState(false)
+    const [modalShow, setModalShow] = useState(false)
 
     const loadTipDetail = async () => {
         const response = await callNeedLoginApi<TipDeatilDto, any>(() => getTipDetail(route.params.tipIdx))
@@ -29,7 +35,6 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
 
     const toggleLike = async () => {
         const response = await callNeedLoginApi<patchToggleLikeResult, any>(() => patchToggleTipLike(route.params.tipIdx))
-        console.log(JSON.stringify(response))
         if (response?.data && tipDetail) {
             const temp = { ...tipDetail }
             temp.isLiked = response.data.isLiked
@@ -46,7 +51,6 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
 
     useEffect(() => {
         if (route.params.preview && route.params.tip) {
-            //console.log(JSON.stringify(route.params.tip))
             setTipDetail(route.params.tip!!)
         } else {
             loadTipDetail()
@@ -56,7 +60,16 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
     return (
         <SafeAreaView style={TipDetailStyle.safeAreaView}>
             <View style={{ flex: 1 }}>
-                <BackButton onPress={() => { navigation.goBack() }} />
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <BackButton onPress={() => { navigation.goBack() }} />
+                    {
+                        tipDetail?.isWriter ?
+                            <MoreButton margin={4} onPress={() => {
+                                setBottomSheetShow(true)
+                            }} />
+                            : null
+                    }
+                </View>
                 <ScrollView style={TipDetailStyle.mainContainer}>
                     <View style={TipDetailStyle.mainContainer}>
                         <Image source={{ uri: tipDetail?.thumbnail }} style={[TipDetailStyle.mainImage, { backgroundColor: colors.card }]} />
@@ -116,6 +129,37 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                     }
                 </View>
             </View>
+            <View style={{ position: "absolute", bottom: 0, height: "100%" }}>
+                <BottomSheet children={
+                    <View style={{ width: "100%", paddingVertical: 40 }}>
+                        {
+                            (true) ?
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"수정하기"} onPress={() => {
+                                        navigation.push("TipEdit", { tip: tipDetail, modifySuccess: () => { loadTipDetail() } })
+                                        setBottomSheetShow(false)
+                                    }} paddingVertical={16} />
+                                    <Line />
+                                    <TextButton text={"삭제하기"} onPress={() => {
+                                        setBottomSheetShow(false)
+                                        setModalShow(true)
+                                    }} paddingVertical={16} />
+                                </View> :
+                                <View style={{ paddingHorizontal: 16 }}>
+                                    <TextButton text={"사용자 차단하기"} onPress={() => {
+
+                                    }} paddingVertical={16} />
+                                </View>
+                        }
+                    </View>
+                } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
+            </View>
+            <ConfirmModal mainText={"해당 tip을\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
+                //const response = await callNeedLoginApi(() => deleteStory(route.params.storyIdx))
+                // if (response?.data?.deleted) {
+                //     navigation.goBack()
+                // }
+            }} isShow={modalShow} setIsShow={setModalShow} />
         </SafeAreaView>
     )
 }

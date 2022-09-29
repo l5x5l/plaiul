@@ -36,3 +36,7 @@ export type reportResult = {
 export type deleteResult = {
     deleted : boolean
 }
+
+export type modifyResult = {
+    modified : boolean
+}

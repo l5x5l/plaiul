@@ -1,9 +1,9 @@
 import { useTheme } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, Pressable, Text, TextInput, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { postWriteTip } from "../../../api/tip";
+import { patchModifyTip, postWriteTip } from "../../../api/tip";
 import textStyle from "../../../style/textStyle";
 import { tipContent } from "../../../type/data/tipContent";
 import { DefaultUserDto } from "../../../type/DTO/userDto";
@@ -67,7 +67,7 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
         }
     }
 
-    const uploadTip = async () => {
+    const uploadTip = async (isModifyMode : boolean = false) => {
         const body = new FormData()
         body.append("title", title)
         body.append("thumbnail", { uri: thumbnail?.uri, type: "multipart/form-data", name: thumbnail?.fileName })
@@ -80,11 +80,24 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
                 body.append("orderList", 1)
             }
         })
-        const response = await callNeedLoginApi(() => postWriteTip(body))
-        if (response?.data?.tipIdx) {
-            navigation.goBack()
-        } else {
-            console.log(JSON.stringify(response))
+        
+        if (!isModifyMode) { // 작성 모드일 경우
+            const response = await callNeedLoginApi(() => postWriteTip(body))
+            if (response?.data?.tipIdx) {
+                navigation.goBack()
+            } else {
+                console.log(JSON.stringify(response))
+            }
+        } else { // 수정 모드일 경우
+            const response = await callNeedLoginApi(() => patchModifyTip(body, route.params.tip!!.tipIdx))
+            if (response?.data?.modified) {
+                if (route.params.modifySuccess){
+                    route.params.modifySuccess()
+                }
+                navigation.goBack()
+            } else {
+                console.log(JSON.stringify(response))
+            }
         }
     }
 
@@ -118,6 +131,7 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
                 isLiked: false,
                 likeCnt: 0,
                 createdAt: "",
+                isWriter : false,
                 user: DefaultUserDto,
                 content: tipContents.map(data => (typeof (data.data) === "string" ? { type: 1, text: data.data } : { type: 2, image: data.data.uri }))
             }
@@ -138,6 +152,23 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
         return (title !== "" && thumbnail !== undefined && tipContents.length >= 1)
     }
 
+    useEffect(() => {
+        // 존재하던 tip 을 수정하는 경우
+        if (route.params.tip) {
+            const contentList : tipContent[] = []
+            route.params.tip.content.map((data, index) => {
+                contentList.push({
+                    data : data.text ? data.text : {uri : data.image!!, fileName : `tip${route.params.tip?.tipIdx}_image${index}`},
+                    key : index
+                })
+                currentKey.current += 1
+            })
+            setTipContents(contentList)
+            setTitle(route.params.tip.title)
+            setThumbnail({uri : route.params.tip.thumbnail, fileName:`tip${route.params.tip.tipIdx}_thumbnail`})
+        }
+    } , [])
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
@@ -150,7 +181,7 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
                             </Pressable>
                             <Pressable onPress={() => {
                                 if (checkUploadable())
-                                    uploadTip()
+                                    uploadTip(route.params.tip !== undefined)
                             }}>
                                 <Text style={[textStyle.title2, { color: checkUploadable() ? colors.text : "#9EAAA4", paddingVertical: 4, paddingHorizontal: 8, marginEnd: 8 }]}>작성하기</Text>
                             </Pressable>
@@ -179,7 +210,7 @@ const TipEditScreen = ({ navigation, route }: tipEditScreenProps) => {
                                         removeContent(key)
                                     }} moveFunction={(up: boolean, key: number) => {
                                         movePosition(up, key)
-                                    }} />
+                                    }} initText={data.data}/>
                                     :
                                     <TipContentImage key={`image_${data.key}`} itemId={data.key} removeFuction={(key: number) => {
                                         removeContent(key);

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { toApiBaseResponse, toApiErrorResponse } from "."
+import { modifyResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { TipDeatilDto, TipDto } from "../type/DTO/tipDto"
 import { getAccessToken } from "../util/token"
 import { patchToggleLikeResult } from "./stories"
@@ -64,5 +64,16 @@ export const postWriteTip = async (body : FormData) => {
         return toApiBaseResponse<postWriteTipResult, undefined>(response)
     } catch(error) {
         return toApiErrorResponse<postWriteTipResult, undefined>(error)
+    }
+}
+
+// tip 수정
+export const patchModifyTip = async (body : FormData, tipIdx : number) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${baseUri}/${tipIdx}`, body, {headers : {"content-type" : "multipart/form-data", Authorization: `Bearer ${accessToken}`}})
+        return toApiBaseResponse<modifyResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<modifyResult, undefined>(error)
     }
 }
