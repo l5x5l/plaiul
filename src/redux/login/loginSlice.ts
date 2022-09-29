@@ -19,6 +19,12 @@ const LoginSlice = createSlice({
         },
         closeBottomSheet : (state) => {
             state.isShowLoginBottomSheet = false
+        },
+        login : (state) => {
+            state.isLogin = true
+        },
+        logout : (state) => {
+            state.isLogin = false
         }
     },
     extraReducers : {

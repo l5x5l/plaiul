@@ -33,7 +33,8 @@ type RootStackParamList = {
         targetIdx : number,
         targetCommentIdx ?: number,
         category : "qna" | "story"
-    }
+    },
+    Splash : undefined
 }
 
 type mainScreenProps = NativeStackScreenProps<RootStackParamList, "Main">
@@ -46,6 +47,7 @@ type qnaScreenProps = NativeStackScreenProps<RootStackParamList, "Qna">
 type qnaEditScreenProps = NativeStackScreenProps<RootStackParamList, "QnaEdit">
 type tipEditScreenProps = NativeStackScreenProps<RootStackParamList, "TipEdit">
 type reportScreenProps = NativeStackScreenProps<RootStackParamList, "Report">
+type splashScreenProps = NativeStackScreenProps<RootStackParamList, "Splash">
 
 
 type LoginParamList = {
@@ -76,6 +78,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps, splashScreenProps,
     LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}

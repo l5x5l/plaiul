@@ -22,6 +22,7 @@ import { Main } from './src/components/pages/main';
 import { QnaScreen } from './src/components/pages/qna';
 import { QnaEditScreen } from './src/components/pages/qnaEdit';
 import { ReportScreen } from './src/components/pages/report';
+import { SplashScreen } from './src/components/pages/splash';
 import { StoryScreen } from './src/components/pages/story';
 import { StoryCommentScreen } from './src/components/pages/storyComment';
 import { StoryEditScreen } from './src/components/pages/storyEdit';
@@ -43,6 +44,7 @@ const App = () => {
           {
             useMemo(() => (
               <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Splash" component={SplashScreen}/>
                 <Stack.Screen name='Main' component={Main} />
                 <Stack.Screen name="Story" component={StoryScreen} />
                 <Stack.Screen name="LoginHome" component={LoginHome} />
