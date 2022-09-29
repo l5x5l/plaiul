@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const baseUri = "http://15.164.214.109"
+export const baseUri = "http://15.164.214.109"
 
 // 기본 요소들
 export type apiBaseResponse<T, G> = {
@@ -9,6 +9,10 @@ export type apiBaseResponse<T, G> = {
     data?: T,
     meta?: G,
     errors?: string[]
+}
+
+export function getDefaultHeader(accessToken : string) {
+    return {Authorization : `Bearer ${accessToken}`}
 }
 
 export function toApiBaseResponse<T, G>(response: AxiosResponse<any, any>) {

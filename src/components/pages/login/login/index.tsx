@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 import { apiBaseResponse } from "../../../../api";
 import { loginResult, postLogin } from "../../../../api/login";
+import LoginSlice from "../../../../redux/login/loginSlice";
+import { rootDispatch } from "../../../../redux/store";
 import textStyle from "../../../../style/textStyle";
 import { LoginScreenProps } from "../../../../type/navigate/types";
 import { setAccessToken, setRefreshToken } from "../../../../util/token";
@@ -18,15 +21,17 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loginResult, setLoginResult] = useState<apiBaseResponse<loginResult, undefined>>()
+    const dispatch = useDispatch<rootDispatch>()
+    const action = LoginSlice.actions
 
     useEffect(() => {
         const saveTokens = async (refreshToken : string, accessToken : string) => {
             await setRefreshToken(refreshToken)
             await setAccessToken(accessToken)
             navigation.goBack()
+            dispatch(action.login())
         }
 
-        console.log(JSON.stringify(loginResult))
         if (loginResult !== undefined) {
             if (loginResult.data !== undefined) {
                 saveTokens(loginResult.data.refreshToken, loginResult.data.accessToken)
