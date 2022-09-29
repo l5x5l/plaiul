@@ -18,8 +18,9 @@ const SplashScreen = ({navigation} : splashScreenProps) => {
         setTimeout(autoLogin, 500)
     }, [])
 
+    // 아직 자동 로그인 api 가 생성되지 않아 임시로 구성
     const autoLogin = async() => {
-        dispatch(action.login)
+        dispatch(action.login())
         navigation.navigate("Main")
     }
 
