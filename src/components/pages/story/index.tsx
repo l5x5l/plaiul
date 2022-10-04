@@ -34,6 +34,10 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
 
     useEffect(() => {
         dispatch(loadStory(route.params.storyIdx))
+
+        return () => {
+            dispatch(action.clear())
+        }
     }, [])
 
     return (

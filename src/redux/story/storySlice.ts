@@ -32,6 +32,11 @@ const storySlice = createSlice({
             state.value.content = action.payload.content,
             state.value.tags = action.payload.tags,
             state.value.images = action.payload.images
+        },
+        clear : (state) => {
+            state.value = DefaultStoryDto
+            state.isError = false
+            state.isLoading = false
         }
     },
     extraReducers: (builder) => {
