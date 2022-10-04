@@ -7,6 +7,7 @@ import myPagePostSlice, { loadMyPostData, myPagePostSliceState } from "../../../
 import { rootDispatch, rootState } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { myPageLikeCategory } from "../../../type/data/mypageLikeCategory";
+import { PostDto } from "../../../type/DTO/postDto";
 import { TipDto } from "../../../type/DTO/tipDto";
 import { mypagePostScreenProps } from "../../../type/navigate/types";
 import { BackButton } from "../../atoms/backButton";
@@ -81,13 +82,13 @@ const MyPagePostScreen = ({ route, navigation }: mypagePostScreenProps) => {
                 {
                     mypagePostInfo.detailCategory ?
                         mypagePostInfo.detailCategory === "story" ?
-                            <FlatList style={{paddingHorizontal : 16}} key={"mypage_story"} keyExtractor={item => (item.storyIdx === undefined) ? `mypage_qna_${item.qnaIdx}` : `mypage_story_${item.storyIdx}`} numColumns={2} data={mypagePostInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
+                            <FlatList style={{paddingHorizontal : 16}} key={"mypage_story"} keyExtractor={item => (item.storyIdx === undefined) ? `mypage_qna_${item.qnaIdx}` : `mypage_story_${item.storyIdx}`} numColumns={2} data={mypagePostInfo.data as PostDto[]} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
                                 navigation.push("Story", { storyIdx: idx })
                             }}/>}
                                 onEndReachedThreshold={0.8}
                                 onEndReached={() => { }} refreshing={isRefresh} onRefresh={() => { refreshList() }} />
                             :
-                            <FlatList style={{paddingHorizontal : 16}} key={"mypage_qna"} keyExtractor={item => (item.storyIdx === undefined) ? `mypage_qna_${item.qnaIdx}` : `mypage_story_${item.storyIdx}`} numColumns={1} data={mypagePostInfo.data} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
+                            <FlatList style={{paddingHorizontal : 16}} key={"mypage_qna"} keyExtractor={item => (item.storyIdx === undefined) ? `mypage_qna_${item.qnaIdx}` : `mypage_story_${item.storyIdx}`} numColumns={1} data={mypagePostInfo.data as PostDto[]} renderItem={({ item }) => <PostView post={item} onClick={(idx: number) => {
                                 if (mypagePostInfo.detailCategory === "story")
                                     navigation.push("Story", { storyIdx: idx })
                                 else
