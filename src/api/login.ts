@@ -1,8 +1,6 @@
 import axios from "axios";
-import { toApiBaseResponse, toApiErrorResponse } from ".";
+import { baseUri, toApiBaseResponse, toApiErrorResponse } from ".";
 import { getAccessToken, getRefreshToken } from "../util/token";
-
-const baseUri = "http://15.164.214.109"
 
 // 로그인
 export type loginResult = {

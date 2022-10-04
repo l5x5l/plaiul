@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-export const baseUri = "http://15.164.214.109"
+export const baseUri = "http://43.200.133.122"
 
 // 기본 요소들
 export type apiBaseResponse<T, G> = {

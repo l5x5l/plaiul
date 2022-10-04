@@ -1,15 +1,15 @@
 import axios from "axios"
-import { deleteResult, modifyResult, toApiBaseResponse, toApiErrorResponse } from "."
+import { baseUri, deleteResult, modifyResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { TipDeatilDto, TipDto } from "../type/DTO/tipDto"
 import { getAccessToken } from "../util/token"
 import { patchToggleLikeResult } from "./stories"
 
-const baseUri = "http://15.164.214.109/api/tips"
+const tipBaseUri = baseUri + "/api/tips"
 
 // best tip 조회
 export const getBestTip = async () => {
     try {
-        const respose = await axios.get(`${baseUri}/best`)
+        const respose = await axios.get(`${tipBaseUri}/best`)
         return toApiBaseResponse<TipDto[], undefined>(respose)
     } catch (error) {
         return toApiErrorResponse<TipDto[], undefined>(error)
@@ -23,7 +23,7 @@ export type getTipResultMeta = {
 
 export const getTip = async (nextCursor?: string) => {
     try {
-        const response = await axios.get(`${baseUri}`, { params: { cursor: nextCursor }})
+        const response = await axios.get(`${tipBaseUri}`, { params: { cursor: nextCursor }})
         return toApiBaseResponse<TipDto[], getTipResultMeta>(response)
     } catch (error) {
         return toApiErrorResponse<TipDto[], getTipResultMeta>(error)
@@ -34,7 +34,7 @@ export const getTip = async (nextCursor?: string) => {
 export const getTipDetail = async (tipIdx : number) => {
     try { 
         const accessToken = await getAccessToken()
-        const response = await axios.get(`${baseUri}/${tipIdx}`, {params : { tipIdx : tipIdx }, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
+        const response = await axios.get(`${tipBaseUri}/${tipIdx}`, {params : { tipIdx : tipIdx }, headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
         return toApiBaseResponse<TipDeatilDto, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<TipDeatilDto, undefined>(error)
@@ -45,7 +45,7 @@ export const getTipDetail = async (tipIdx : number) => {
 export const patchToggleTipLike = async (tipIdx : number) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.patch(`${baseUri}/${tipIdx}/like`, {}, {headers : {Authorization: `Bearer ${accessToken}`}})
+        const response = await axios.patch(`${tipBaseUri}/${tipIdx}/like`, {}, {headers : {Authorization: `Bearer ${accessToken}`}})
         return toApiBaseResponse<patchToggleLikeResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<patchToggleLikeResult, undefined>(error)
@@ -60,7 +60,7 @@ export type postWriteTipResult = {
 export const postWriteTip = async (body : FormData) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.post(`${baseUri}`, body, {headers : {"content-type" : "multipart/form-data",  Authorization : `Bearer ${accessToken}`}})
+        const response = await axios.post(`${tipBaseUri}`, body, {headers : {"content-type" : "multipart/form-data",  Authorization : `Bearer ${accessToken}`}})
         return toApiBaseResponse<postWriteTipResult, undefined>(response)
     } catch(error) {
         return toApiErrorResponse<postWriteTipResult, undefined>(error)
@@ -71,7 +71,7 @@ export const postWriteTip = async (body : FormData) => {
 export const patchModifyTip = async (body : FormData, tipIdx : number) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.patch(`${baseUri}/${tipIdx}`, body, {headers : {"content-type" : "multipart/form-data", Authorization: `Bearer ${accessToken}`}})
+        const response = await axios.patch(`${tipBaseUri}/${tipIdx}`, body, {headers : {"content-type" : "multipart/form-data", Authorization: `Bearer ${accessToken}`}})
         return toApiBaseResponse<modifyResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<modifyResult, undefined>(error)
@@ -82,7 +82,7 @@ export const patchModifyTip = async (body : FormData, tipIdx : number) => {
 export const deleteTip = async (tipIdx : number) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.delete(`${baseUri}/${tipIdx}`, {headers : {Authorization: `Bearer ${accessToken}`}})
+        const response = await axios.delete(`${tipBaseUri}/${tipIdx}`, {headers : {Authorization: `Bearer ${accessToken}`}})
         return toApiBaseResponse<deleteResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<deleteResult, undefined>(error)

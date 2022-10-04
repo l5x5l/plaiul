@@ -1,10 +1,8 @@
 import axios from "axios";
-import { deleteResult, reportResult, toApiBaseResponse, toApiErrorResponse } from ".";
+import { baseUri, deleteResult, reportResult, toApiBaseResponse, toApiErrorResponse } from ".";
 import { CommentDto } from "../type/DTO/commentDto";
 import { StoryDto } from "../type/DTO/storyDto";
 import { getAccessToken } from "../util/token";
-
-const baseUri = "http://15.164.214.109"
 
 // 스토리 상세 조회
 export const getStory = async (id: number) => {
