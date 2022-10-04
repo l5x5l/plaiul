@@ -17,6 +17,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { LoginModal } from './src/components/blocks/loginModal';
+import { EditProfileScreen } from './src/components/pages/editProfile';
 import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
 import { QnaScreen } from './src/components/pages/qna';
@@ -55,6 +56,7 @@ const App = () => {
                 <Stack.Screen name="Tip" component={TipDetailScreen}/>
                 <Stack.Screen name="TipEdit" component={TipEditScreen}/>
                 <Stack.Screen name="Report" component={ReportScreen}/>
+                <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
               </Stack.Navigator>
             ), [])
           }

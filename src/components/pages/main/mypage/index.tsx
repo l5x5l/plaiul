@@ -24,7 +24,7 @@ const MyPageScreen = (props: MyPageScreenProps) => {
 
     const { colors } = useTheme();
     const [userInfo, setUserInfo] = useState<UserDto>()
-    const isLogin = useSelector<rootState, boolean>(state=>state.login.isLogin)
+    const isLogin = useSelector<rootState, boolean>(state => state.login.isLogin)
     const action = LoginSlice.actions
     const dispatch = useDispatch<rootDispatch>()
 
@@ -46,23 +46,23 @@ const MyPageScreen = (props: MyPageScreenProps) => {
 
     return (
         <ScrollView style={MyPageStyle.container}>
-                {
-                    userInfo !== undefined ? 
+            {
+                userInfo !== undefined ?
                     <View style={MyPageStyle.titleArea}>
                         <Text style={[textStyle.headline1, { color: colors.text, flex: 1 }]}>{`반가워요\n${userInfo.nickname}님!`}</Text>
                         <Image style={{ height: 64, width: 64, borderRadius: 32 }} source={{ uri: (userInfo.profile !== undefined) ? userInfo.profile : "https://reactnative.dev/img/tiny_logo.png" }} />
-                     </View>
+                    </View>
                     :
                     <Pressable onPress={() => {
                         props.navigation.push("LoginHome")
-                    }} style={{marginTop : 24}}>
+                    }} style={{ marginTop: 24 }}>
                         <Text style={[textStyle.headline1, { color: colors.text, flex: 1 }]}>{`로그인/회원가입 하기`}</Text>
                     </Pressable>
-                }
+            }
             <Line marginTop={24} />
             <Text style={[textStyle.headline3, { color: colors.text, marginTop: 24, marginBottom: 16 }]}>내 활동</Text>
             <TextButton text={"좋아요 한 게시글"} onPress={function (): void {
-                
+
             }} />
             <TextButton text={"좋아요 한 Grower's tip"} onPress={function (): void {
 
@@ -85,7 +85,9 @@ const MyPageScreen = (props: MyPageScreenProps) => {
 
             }} />
             <TextButton text={"프로필 수정"} onPress={function (): void {
-
+                if (userInfo) {
+                    props.navigation.push("EditProfile", { userInfo })
+                }
             }} />
             <TextButton text={"고객센터"} onPress={function (): void {
 
