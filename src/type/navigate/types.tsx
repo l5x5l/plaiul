@@ -44,6 +44,9 @@ type RootStackParamList = {
     MyPagePost : {
         category : myPageLikeCategory,
         detailCategory ?: postCategory
+    },
+    profile : {
+        userInfo : UserDto
     }
 }
 
@@ -60,6 +63,7 @@ type reportScreenProps = NativeStackScreenProps<RootStackParamList, "Report">
 type splashScreenProps = NativeStackScreenProps<RootStackParamList, "Splash">
 type editProfileScreenProps = NativeStackScreenProps<RootStackParamList, "EditProfile">
 type mypagePostScreenProps = NativeStackScreenProps<RootStackParamList, "MyPagePost">
+type profileScreenProps = NativeStackScreenProps<RootStackParamList, "profile">
 
 type LoginParamList = {
     Login : undefined,
@@ -89,6 +93,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps, splashScreenProps, editProfileScreenProps, mypagePostScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps, splashScreenProps, editProfileScreenProps, mypagePostScreenProps, profileScreenProps,
     LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}
