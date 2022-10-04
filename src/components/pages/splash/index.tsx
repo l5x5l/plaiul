@@ -3,10 +3,13 @@ import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+import { getMyPage } from "../../../api/mypage";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { splashScreenProps } from "../../../type/navigate/types";
+import callNeedLoginApi from "../../../util/callNeedLogin";
+import { getAccessToken, removeAccessToken, removeRefreshToken } from "../../../util/token";
 import { Logo } from "../../atoms/logo";
 
 const SplashScreen = ({navigation} : splashScreenProps) => {
@@ -18,9 +21,22 @@ const SplashScreen = ({navigation} : splashScreenProps) => {
         setTimeout(autoLogin, 500)
     }, [])
 
-    // 아직 자동 로그인 api 가 생성되지 않아 임시로 구성
+    // 아직 자동 로그인 api 대신 마이페이지 사용자 조회 api 사용
     const autoLogin = async() => {
-        dispatch(action.login())
+        const token = await getAccessToken()
+        if (token !== null) {
+            const result = await callNeedLoginApi(() => getMyPage())
+            if (result?.data)
+                dispatch(action.login())
+            else {
+                dispatch(action.logout())
+                await removeAccessToken()
+                await removeRefreshToken()
+            }
+        } else {
+            await removeAccessToken()
+            await removeRefreshToken()
+        }
         navigation.navigate("Main")
     }
 
