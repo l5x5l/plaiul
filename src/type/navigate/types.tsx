@@ -1,5 +1,7 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { myPageLikeCategory } from "../data/mypageLikeCategory";
+import { postCategory } from "../data/postCategory";
 import { TipDeatilDto } from "../DTO/tipDto";
 import { UserDto } from "../DTO/userDto";
 
@@ -38,6 +40,10 @@ type RootStackParamList = {
     Splash : undefined,
     EditProfile : {
         userInfo : UserDto
+    },
+    MyPagePost : {
+        category : myPageLikeCategory,
+        detailCategory ?: postCategory
     }
 }
 
@@ -53,7 +59,7 @@ type tipEditScreenProps = NativeStackScreenProps<RootStackParamList, "TipEdit">
 type reportScreenProps = NativeStackScreenProps<RootStackParamList, "Report">
 type splashScreenProps = NativeStackScreenProps<RootStackParamList, "Splash">
 type editProfileScreenProps = NativeStackScreenProps<RootStackParamList, "EditProfile">
-
+type mypagePostScreenProps = NativeStackScreenProps<RootStackParamList, "MyPagePost">
 
 type LoginParamList = {
     Login : undefined,
@@ -83,6 +89,6 @@ type MainTabParamList = {
 
 type CommunityTabScreenProps = BottomTabNavigationProp<MainTabParamList, "Community">
 
-export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps, splashScreenProps, editProfileScreenProps,
+export type {RootStackParamList, mainScreenProps, storyScreenProps, LoginHomeScreenProps, TipDeatilScreenProps, storyCommentScreenProps, storyEditScreenProps, qnaScreenProps, qnaEditScreenProps, tipEditScreenProps, reportScreenProps, splashScreenProps, editProfileScreenProps, mypagePostScreenProps,
     LoginParamList, LoginScreenProps, SignUpScreenProps, SignUpEmailScreenProps, SignUpAuthScreenProps, SignUpNicknameScreenProps, SignUpTermScreenProps, SignUpPasswordScreenProps,
     MainTabParamList, CommunityTabScreenProps}

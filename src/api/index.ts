@@ -44,3 +44,7 @@ export type deleteResult = {
 export type modifyResult = {
     modified : boolean
 }
+
+export type pagingMeta = {
+    nextCursor? : string
+}

@@ -1,0 +1,1 @@
+export declare type myPageLikeCategory = "likePost" | "likeTip" | "myPost" | "myTip" | "commentPost"

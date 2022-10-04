@@ -20,6 +20,7 @@ import { LoginModal } from './src/components/blocks/loginModal';
 import { EditProfileScreen } from './src/components/pages/editProfile';
 import { LoginHome } from './src/components/pages/login';
 import { Main } from './src/components/pages/main';
+import { MyPagePostScreen } from './src/components/pages/mypagePost';
 import { QnaScreen } from './src/components/pages/qna';
 import { QnaEditScreen } from './src/components/pages/qnaEdit';
 import { ReportScreen } from './src/components/pages/report';
@@ -57,6 +58,7 @@ const App = () => {
                 <Stack.Screen name="TipEdit" component={TipEditScreen}/>
                 <Stack.Screen name="Report" component={ReportScreen}/>
                 <Stack.Screen name="EditProfile" component={EditProfileScreen}/>
+                <Stack.Screen name="MyPagePost" component={MyPagePostScreen}/>
               </Stack.Navigator>
             ), [])
           }

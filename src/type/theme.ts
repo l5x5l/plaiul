@@ -11,3 +11,5 @@ export declare type color = {
     border: string,
     notification: string,
 }
+
+export const deactiveColor = "#9EAAA4" 

@@ -6,6 +6,7 @@ import storySlice from "./story/storySlice";
 import qnaSlice from "./qna/qnaSlice";
 import LoginSlice from "./login/loginSlice";
 import tipListSlice from "./tip/tipListSlice";
+import myPagePostSlice from "./myPageLike.ts/myPageLikeSlice";
 
 export const store = configureStore({
     reducer : {
@@ -15,7 +16,8 @@ export const store = configureStore({
         commentList : commentSlice.reducer,
         qna : qnaSlice.reducer,
         login : LoginSlice.reducer,
-        tipList : tipListSlice.reducer
+        tipList : tipListSlice.reducer,
+        mypagePost : myPagePostSlice.reducer
     }
 })
 
