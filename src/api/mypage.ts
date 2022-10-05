@@ -1,5 +1,5 @@
 import axios from "axios"
-import { baseUri, getDefaultHeader, pagingMeta, toApiBaseResponse, toApiErrorResponse } from "."
+import { baseUri, getDefaultHeader, modifyResult, pagingMeta, toApiBaseResponse, toApiErrorResponse } from "."
 import { postCategory } from "../type/data/postCategory"
 import { PostDto } from "../type/DTO/postDto"
 import { TipDto } from "../type/DTO/tipDto"
@@ -66,5 +66,15 @@ export const getMyCommentPost = async(category : postCategory, cursor ?: string)
         return toApiBaseResponse<PostDto[], pagingMeta>(response)
     } catch (error) {
         return toApiErrorResponse<PostDto[], pagingMeta>(error)
+    }
+}
+
+export const modifyProfile = async(body : FormData) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.patch(`${mypageBaseUri}/profile`, body, {headers : accessToken ? getDefaultHeader(accessToken) : undefined})
+        return toApiBaseResponse<modifyResult, undefined>(response)
+    } catch (error) {
+        return toApiErrorResponse<modifyResult, undefined>(error)
     }
 }

@@ -1,12 +1,13 @@
 import { useTheme } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dimensions, Image, Platform, Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { launchImageLibrary } from "react-native-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { modifyProfile } from "../../../api/mypage";
 import textStyle from "../../../style/textStyle";
-import { photo } from "../../../type/data/tipContent";
 import { editProfileScreenProps } from "../../../type/navigate/types";
+import callNeedLoginApi from "../../../util/callNeedLogin";
 import { BackButton } from "../../atoms/backButton";
 import { StyledButton } from "../../atoms/button";
 import { Line } from "../../atoms/line";
@@ -22,15 +23,26 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
         return (nickname !== prevNickname || prevProfile !== profile)
     }
 
-    const editProfile = async( newNickname : string, newProfileUri ?: string ) => {
+    const editProfile = async (newNickname: string, newProfileUri?: string) => {
+        const body = new FormData()
         if (newNickname !== prevProfile) {
-
+            body.append("nickname", newNickname)
         }
         if (newProfileUri !== prevProfile && newProfileUri !== undefined) {
-            const newProfile : photo = {
-                uri : newProfileUri,
-                fileName : `${route.params.userInfo.userIdx}_profile_image`
+            const newProfile = {
+                uri: newProfileUri,
+                type: "multipart/form-data",
+                name: `${route.params.userInfo.userIdx}_profile_image`
             }
+            body.append("profile", newProfile)
+        }
+        else if (newProfileUri !== prevProfile && newProfileUri === undefined) {
+            body.append("defaultProfile", true)
+        }
+        const result = await callNeedLoginApi(() => modifyProfile(body))
+        console.log(JSON.stringify(result))
+        if (result?.data?.modified) {
+            navigation.goBack()
         }
     }
 
@@ -41,22 +53,36 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                     <BackButton margin={4} onPress={() => { navigation.goBack() }} />
                 </View>
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 60 }}>
-                    <Pressable>
-                        <Image source={{ uri: profile }} style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
-                    </Pressable>
+                    <View>
+
+                        <Pressable>
+                            <Image source={{ uri: profile }} style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
+                        </Pressable>
+                        {
+                            profile &&
+                            <Pressable onPress={() => { setProfile(undefined) }} style={{ position: "absolute", top: 0, right: 0 }}>
+                                <View style={{ height: 32, width: 32, backgroundColor: colors.border, alignItems: "center", justifyContent: "center", borderRadius: 16 }}>
+                                    <Image source={require("../../../assets/images/cancel_24.png")} style={{ height: 24, width: 24, tintColor: colors.background }} />
+                                </View>
+                            </Pressable>
+                        }
+
+                    </View>
+
                     <Pressable onPress={async () => {
-                          const response = await launchImageLibrary({ mediaType: "photo"})
-                          if (response.assets != undefined) {
+                        const response = await launchImageLibrary({ mediaType: "photo" })
+                        if (response.assets != undefined) {
                             const uri = (response.assets[0].uri === undefined) ? undefined : response.assets[0].uri
                             setProfile(uri)
                         }
                     }}>
-                        <Text style={[textStyle.caption, { color: colors.text, padding: 8, marginBottom : 40 }]}>사진 변경하기</Text>
+                        <Text style={[textStyle.caption, { color: colors.text, padding: 8 }]}>사진 변경하기</Text>
                     </Pressable>
-                    <View style={{ width: "100%", marginBottom : 40 }}>
-                        <Text style={[textStyle.title2, { color: colors.text, marginBottom: 8}]}>닉네임</Text>
-                        <View style={{ flexDirection: "row", marginVertical: 8 }}>
-                            <TextInput style={[textStyle.body2, { color: colors.text, flex: 1 }]} defaultValue={nickname} onChangeText={setNickname}/>
+
+                    <View style={{ width: "100%", marginBottom: 40 }}>
+                        <Text style={[textStyle.title2, { color: colors.text, marginBottom: 8 }]}>닉네임</Text>
+                        <View style={{ flexDirection: "row", marginTop: 8 }}>
+                            <TextInput style={[textStyle.body2, { color: colors.text, flex: 1 }]} defaultValue={nickname} onChangeText={setNickname} />
                             <Text style={[textStyle.caption, { color: colors.text }]}>{`${nickname.length}/10`}</Text>
                         </View>
                         <Line />
@@ -64,7 +90,7 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                     </View>
                 </View>
                 <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
-                    <StyledButton onClick={ () =>
+                    <StyledButton onClick={async () =>
                         editProfile(nickname, profile)
                     } style={"background"} text={"프로필 수정하기"} height={56} enable={checkAvailable()} />
                 </View>
