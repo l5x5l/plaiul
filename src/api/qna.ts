@@ -1,17 +1,21 @@
 import axios from "axios"
-import { baseUri, deleteResult, reportResult, toApiBaseResponse, toApiErrorResponse } from "."
+import { baseUri, deleteResult, pagingMeta, reportResult, toApiBaseResponse, toApiErrorResponse } from "."
 import { CommentDto } from "../type/DTO/commentDto"
+import { PostDto } from "../type/DTO/postDto"
 import { QnaDto } from "../type/DTO/qnaDto"
 import { getAccessToken } from "../util/token"
 import { patchToggleLikeResult } from "./stories"
 
 // qna 리스트 조회
-export const getQnaList = (sort: string, cursor?: string) => axios.get(`${baseUri}/api/qna`, { params: { sort: sort, cursor: cursor }, headers: {} }).then(data => data.data).catch((error) => {
-    if (error.response?.data !== undefined)
-        return error.response.data
-    else
-        throw error
-})
+export const getQnaList = async (sort : string, cursor ?: string) => {
+    try {
+        const accessToken = await getAccessToken()
+        const response = await axios.get(`${baseUri}/api/qna`, { params: { sort: sort, cursor: cursor }, headers:  accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined })
+        return toApiBaseResponse<PostDto[], pagingMeta>(response)
+    } catch (error) {
+        return toApiErrorResponse<PostDto[], pagingMeta>(error)
+    }
+}
 
 // qna 상세 조회
 export const getQna = async (id : number) => {
