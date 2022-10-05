@@ -1,13 +1,15 @@
 import { useNavigation, useTheme } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useMemo, useState } from "react";
 import { Animated, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import PagerView, { PagerViewOnPageSelectedEventData } from "react-native-pager-view";
 import { stroke2Container } from "../../../style/containerStyle";
 import textStyle from "../../../style/textStyle";
-import { PostDto } from "../../../type/DTO/postDto";
-import { CommunityTabScreenProps } from "../../../type/navigate/types";
+import { PairPostDto } from "../../../type/DTO/postDto";
+import { CommunityTabScreenProps, RootStackParamList } from "../../../type/navigate/types";
 export declare type PostPagerViewProps = {
-    title: string
+    title: string,
+    posts: PairPostDto[]
 }
 
 const PostPagerView = (props: PostPagerViewProps) => {
@@ -15,44 +17,19 @@ const PostPagerView = (props: PostPagerViewProps) => {
     const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
     const [activePage, setActivePage] = useState(0)
 
-    const [dataList, setDataList] = useState<PostDto[]>([{
-        qnaIdx: 0,
-        title: "qnaTitle1",
-        content: "qna 1 content will be here!",
-        thumbnail: "",
-        user: {
-            userIdx: 0,
-            nickname: "probe"
-        }
-    }, {
-        storyIdx: 0,
-        title: "storyTitle1",
-        content: "story 1 content will be here!",
-        thumbnail: "",
-
-    }, {
-        qnaIdx: 1,
-        title: "qnaTitle2",
-        content: "qna 1 content will be here!",
-        thumbnail: "",
-        user: {
-            userIdx: 0,
-            nickname: "probe"
-        }
-    }])
-
     const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
     const navigator = useNavigation<CommunityTabScreenProps>()
+    const postNavigator = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
     return (
         <View style={{ paddingHorizontal: 16, marginTop: 56, width: "100%", flex: 1 }}>
             <View style={PostPagerStyle.titleArea}>
                 <View style={[PostPagerStyle.rowContainer, { alignItems: "flex-end" }]}>
                     <Text style={[textStyle.title1, { color: colors.text }]}>{props.title}</Text>
-                    <Text style={[textStyle.body3, { marginStart: 8, color: colors.text }]}>{`${(activePage + 1)} / ${dataList.length}`}</Text>
+                    <Text style={[textStyle.body3, { marginStart: 8, color: colors.text }]}>{`${(activePage + 1)} / ${props.posts.length}`}</Text>
                 </View>
                 <View style={PostPagerStyle.rowContainer}>
-                    <Pressable onPress={() => {navigator.navigate("Community")}}>
+                    <Pressable onPress={() => { navigator.navigate("Community") }}>
                         <Text style={[textStyle.body3, { color: colors.text }]}>전체보기</Text>
                     </Pressable>
                 </View>
@@ -75,28 +52,49 @@ const PostPagerView = (props: PostPagerViewProps) => {
                         }
                     )} style={{ height: 256 }} pageMargin={16}>
                         {
-                            dataList.map((data, index) => (
+                            props.posts.map((data, index) => (
                                 <View style={{ height: "100%", width: "100%", marginTop: 24 }} collapsable={false} key={`${props.title}_${index}`}>
-                                    <View style={[PostPagerStyle.rowContainer, stroke2Container(colors.border)]}>
-                                        <View style={{ flex: 1, padding: 16 }}>
-                                            <Text style={[textStyle.title2, { color: colors.text }]}>{data.title}</Text>
-                                            <Text style={[textStyle.body3, { color: colors.text, marginTop: 4 }]}>{data.content}</Text>
-                                            <Text style={[textStyle.caption, { color: colors.text, marginTop: 12 }]}>{data.user?.nickname ? data.user?.nickname : "default"}</Text>
-                                        </View>
-                                        <Image source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }} style={PostPagerStyle.image} />
-                                    </View>
-                                    <View style={[PostPagerStyle.rowContainer, stroke2Container(colors.border), { marginTop: 8 }]}>
-                                        <View style={{ flex: 1, padding: 16 }}>
-                                            <Text style={[textStyle.title2, { color: colors.text }]}>{data.title}</Text>
-                                            <Text style={[textStyle.body3, { color: colors.text, marginTop: 4 }]}>{data.content}</Text>
-                                            <Text style={[textStyle.caption, { color: colors.text, marginTop: 12 }]}>{data.user?.nickname ? data.user?.nickname : "default"}</Text>
-                                        </View>
-                                        <Image source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }} style={PostPagerStyle.image} />
-                                    </View>
+                                    {data.top &&
+                                        <Pressable onPress={() => {
+                                            if (data.top?.storyIdx) {
+                                                postNavigator.navigate("Story", { storyIdx: data.top.storyIdx })
+                                            } else if (data.top?.qnaIdx) {
+                                                postNavigator.navigate("Qna", { qnaIdx: data.top.qnaIdx })
+                                            }
+                                        }}>
+                                            <View style={[PostPagerStyle.rowContainer, stroke2Container(colors.border)]}>
+                                                <View style={{ flex: 1, padding: 16 }}>
+                                                    <Text style={[textStyle.title2, { color: colors.text }]}>{data.top.title}</Text>
+                                                    <Text style={[textStyle.body3, { color: colors.text, marginTop: 4 }]} numberOfLines={1}>{data.top.content}</Text>
+                                                    <Text style={[textStyle.caption, { color: colors.text, marginTop: 12 }]}>{data.top.user?.nickname ? data.top.user?.nickname : "default"}</Text>
+                                                </View>
+                                                <Image source={{ uri: data.top.thumbnail }} style={PostPagerStyle.image} />
+                                            </View>
+                                        </Pressable>
+                                    }
+                                    {data.bottom &&
+                                        <Pressable onPress={() => {
+                                            if (data.bottom?.storyIdx) {
+                                                postNavigator.navigate("Story", { storyIdx: data.bottom.storyIdx })
+                                            } else if (data.bottom?.qnaIdx) {
+                                                postNavigator.navigate("Qna", { qnaIdx: data.bottom.qnaIdx })
+                                            }
+                                        }}>
+                                            <View style={[PostPagerStyle.rowContainer, stroke2Container(colors.border), { marginTop: 8 }]}>
+
+                                                <View style={{ flex: 1, padding: 16 }}>
+                                                    <Text style={[textStyle.title2, { color: colors.text }]}>{data.bottom.title}</Text>
+                                                    <Text style={[textStyle.body3, { color: colors.text, marginTop: 4 }]} numberOfLines={1}>{data.bottom.content}</Text>
+                                                    <Text style={[textStyle.caption, { color: colors.text, marginTop: 12 }]}>{data.bottom.user?.nickname ? data.bottom.user?.nickname : "default"}</Text>
+                                                </View>
+                                                <Image source={{ uri: data.bottom.thumbnail }} style={PostPagerStyle.image} />
+                                            </View>
+                                        </Pressable>
+                                    }
                                 </View>
                             ))}
                     </AnimatedPagerView>
-                    , [dataList])
+                    , [props.posts])
             }
         </View>
     )
