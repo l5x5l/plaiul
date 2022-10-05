@@ -48,3 +48,7 @@ export type modifyResult = {
 export type pagingMeta = {
     nextCursor? : string
 }
+
+export type blockResult = {
+    blocked : boolean
+}

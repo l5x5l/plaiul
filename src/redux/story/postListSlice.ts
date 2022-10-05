@@ -58,6 +58,9 @@ const postListSlice = createSlice({
             state.isLast = false
             state.cursor = undefined
             //console.log("state" + `${JSON.stringify(state)}`)
+        },
+        blockUser : (state, action : PayloadAction<number>) => {
+            state.data = state.data.filter(data => data.user?.userIdx !== action.payload)
         }
     }, 
     extraReducers: (builder) => {

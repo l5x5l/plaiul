@@ -4,10 +4,13 @@ import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteQna, deleteQnaComment, postQnaCommentResult, postWriteQnaComment } from "../../../api/qna";
+import { postBlockUser } from "../../../api/user";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState } from "../../../redux/store";
+import postListSlice from "../../../redux/story/postListSlice";
 import textStyle from "../../../style/textStyle";
+import { UserDto } from "../../../type/DTO/userDto";
 import { qnaScreenProps } from "../../../type/navigate/types";
 import callNeedLoginApi from "../../../util/callNeedLogin";
 import { checkIsLogin } from "../../../util/token";
@@ -24,12 +27,15 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
 
     const { colors, dark } = useTheme()
     const [bottomSheetShow, setBottomSheetShow] = useState(false)
-    const [modalShow, setModalShow] = useState(false)
+    const [removeModalShow, setRemoveModalShow] = useState(false)
+    const [blockModalShow, setBlockModalShow] = useState(false)
     const commentListInfo = useSelector<rootState, commentSliceState>(state => state.commentList)
     const dispatch = useDispatch<rootDispatch>()
     const loginAction = LoginSlice.actions
     const commentAction = commentSlice.actions
+    const postListAction = postListSlice.actions
     const isQnaWriter = useSelector<rootState, boolean>(state => state.qna.value.isWriter)
+    const qnaWriter = useSelector<rootState, UserDto>(state => state.qna.value.user)
 
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
@@ -132,7 +138,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
                                         setBottomSheetShow(false)
-                                        setModalShow(true)
+                                        setRemoveModalShow(true)
                                     }} paddingVertical={16} />
                                 </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
@@ -147,7 +153,16 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                         }
                                     }} paddingVertical={16} />
                                     <Line />
-                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"사용자 차단하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            setBlockModalShow(true)
+                                        } else {
+                                            dispatch(commentAction.setMoreButtonComment(undefined))
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
                                 </View>
                         }
                     </View>
@@ -155,7 +170,7 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
             </View>
             <ConfirmModal mainText={"qna를\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
                 removeQna()
-            }} isShow={modalShow} setIsShow={setModalShow} />
+            }} isShow={removeModalShow} setIsShow={setRemoveModalShow} />
 
             <View key={"commentBottomSheet"} style={{ position: "absolute", bottom: 0, height: "100%" }}>
                 <BottomSheet children={
@@ -179,7 +194,15 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                                         }
                                     }} paddingVertical={16} />
                                     <Line />
-                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"사용자 차단하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setCommentBottomSheetShow(false)
+                                            setBlockModalShow(true)
+                                        } else {
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
                                 </View>
                         }
                     </View>
@@ -206,6 +229,27 @@ const QnaScreen = ({ route, navigation }: qnaScreenProps) => {
                     dispatch(commentAction.setMoreButtonComment(undefined))
                 }
             }} />
+
+            <ConfirmModal mainText={`${commentListInfo.moreButtonTargetComment ? commentListInfo.moreButtonTargetComment.user.nickname : qnaWriter.nickname}` + "님을\n차단하시겠습니까?"} confirmButtonText={"차단하기"} confirmCallback={async () => {
+                const isBlockCommentUser = commentListInfo.moreButtonTargetComment !== undefined
+                const response = await callNeedLoginApi(() => postBlockUser(isBlockCommentUser ? commentListInfo.moreButtonTargetComment!!.user.userIdx : qnaWriter.userIdx))
+                if (response?.data?.blocked) {
+                    dispatch(postListAction.blockUser(qnaWriter.userIdx))
+                    if (isBlockCommentUser) {
+                        dispatch(commentAction.refresh())
+                        dispatch(loadCommentList({ postIdx: route.params.qnaIdx, cursor: undefined, category: "qna" }))
+                    } else {
+                        navigation.goBack()
+                    }
+
+                }
+            }} isShow={blockModalShow} setIsShow={(isShow) => {
+                if (!isShow) {
+                    dispatch(commentAction.setMoreButtonComment(undefined))
+                }
+                setBlockModalShow(isShow)
+            }} />
+
         </SafeAreaView>
     )
 }

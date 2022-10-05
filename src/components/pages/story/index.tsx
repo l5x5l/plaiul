@@ -19,6 +19,8 @@ import callNeedLoginApi from "../../../util/callNeedLogin";
 import { deleteStory } from "../../../api/stories";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { checkIsLogin } from "../../../util/token";
+import { postBlockUser } from "../../../api/user";
+import postListSlice from "../../../redux/story/postListSlice";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -28,9 +30,11 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
     const story = useSelector<rootState, storySliceState>(state => state.story)
     const action = storySlice.actions
     const loginAction = LoginSlice.actions
+    const postListAction = postListSlice.actions
 
     const [bottomSheetShow, setBottomSheetShow] = useState(false)
-    const [modalShow, setModalShow] = useState(false)
+    const [removeModalShow, setRemoveModalShow] = useState(false)
+    const [blockModalShow, setBlockModalShow] = useState(false)
 
     useEffect(() => {
         dispatch(loadStory(route.params.storyIdx))
@@ -56,11 +60,13 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                     <Image style={{ width: "100%", aspectRatio: 1, backgroundColor: colors.card }} source={{ uri: (story.value.images && story.value.images.length >= 1) ? story.value.images[0] : undefined }} />
                     <View style={{ padding: 16 }}>
                         <Text style={[textStyle.headline1, { color: colors.text }]}>{(!story.isError) ? (story.value.title) : "에러입니다."}</Text>
-                        <View style={StoryScreenStyle.profileArea}>
-                            <Image style={[StoryScreenStyle.profile, { backgroundColor: colors.card }]} source={{ uri: story.value.user?.profile }}></Image>
-                            <Text style={[textStyle.body2, { color: colors.text, marginStart: 8 }]}>{story.value.user.nickname}</Text>
-                            <Text style={[textStyle.body2, { color: colors.text, marginStart: 16 }]}>{story.value.createdAt}</Text>
-                        </View>
+                        <Pressable style={{ marginTop: 16 }} onPress={() => { navigation.push("profile", { userInfo: story.value.user }) }}>
+                            <View style={StoryScreenStyle.profileArea}>
+                                <Image style={[StoryScreenStyle.profile, { backgroundColor: colors.card }]} source={{ uri: story.value.user?.profile }}></Image>
+                                <Text style={[textStyle.body2, { color: colors.text, marginStart: 8 }]}>{story.value.user.nickname}</Text>
+                                <Text style={[textStyle.body2, { color: colors.text, marginStart: 16 }]}>{story.value.createdAt}</Text>
+                            </View>
+                        </Pressable>
                         <Text style={[textStyle.body2, { marginTop: 24, color: colors.text }]}>{story.value.content}</Text>
                         <View style={{ flexDirection: "row", width: "100%", marginTop: 24, marginBottom: 24 }}>
                             {
@@ -112,24 +118,31 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                                     <Line />
                                     <TextButton text={"삭제하기"} onPress={() => {
                                         setBottomSheetShow(false)
-                                        setModalShow(true)
+                                        setRemoveModalShow(true)
                                     }} paddingVertical={16} />
                                 </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"신고하기"} onPress={async () => { 
+                                    <TextButton text={"신고하기"} onPress={async () => {
                                         const isLogin = await checkIsLogin()
                                         if (isLogin) {
                                             setBottomSheetShow(false)
-                                            navigation.push("Report", {targetIdx : route.params.storyIdx, category : "story"})
+                                            navigation.push("Report", { targetIdx: route.params.storyIdx, category: "story" })
                                         } else {
                                             setBottomSheetShow(false)
                                             dispatch(loginAction.callBottomSheet())
                                         }
                                     }} paddingVertical={16} />
                                     <Line />
-                                    <TextButton text={"사용자 차단하기"} onPress={() => {
-                                        
-                                     }} paddingVertical={16} />
+                                    <TextButton text={"사용자 차단하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            setBlockModalShow(true)
+                                        } else {
+                                            setBottomSheetShow(false)
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                    }} paddingVertical={16} />
                                 </View>
                         }
                     </View>
@@ -140,7 +153,15 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                 if (response?.data?.deleted) {
                     navigation.goBack()
                 }
-            }} isShow={modalShow} setIsShow={setModalShow} />
+            }} isShow={removeModalShow} setIsShow={setRemoveModalShow} />
+            <ConfirmModal mainText={`${story.value.user.nickname}님을` + "\n차단하시겠습니까?"} confirmButtonText={"차단하기"} confirmCallback={async () => {
+                const response = await callNeedLoginApi(() => postBlockUser(story.value.user.userIdx))
+                if (response?.data?.blocked) {
+                    dispatch(postListAction.blockUser(story.value.user.userIdx))
+                    navigation.goBack()
+                }
+            }} isShow={blockModalShow} setIsShow={setBlockModalShow} />
+
         </SafeAreaView>
 
     )
@@ -149,7 +170,6 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
 const StoryScreenStyle = StyleSheet.create({
     profileArea: {
         flexDirection: "row",
-        marginTop: 16,
         alignItems: "center"
     },
     profile: {
