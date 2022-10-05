@@ -5,6 +5,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteStoryComment, postStoryCommentResult, postWriteStoryComment } from "../../../api/stories";
+import { postBlockUser } from "../../../api/user";
 import commentSlice, { commentSliceState, loadCommentList } from "../../../redux/comment/commentSlice";
 import LoginSlice from "../../../redux/login/loginSlice";
 import { rootDispatch, rootState, store } from "../../../redux/store";
@@ -30,7 +31,8 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
     const [writingComment, setWritingComment] = useState("")
     const [isRefresh, setIsRefresh] = useState(false)
     const [bottomSheetShow, setBottomSheetShow] = useState(false)
-    const [modalShow, setModalShow] = useState(false)
+    const [removeModalShow, setRemoveModalShow] = useState(false)
+    const [blockModalShow, setBlockModalShow] = useState(false)
 
     function setData() {
         if (!commentListInfo.isLast) {
@@ -105,7 +107,7 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                                 <View style={{ paddingHorizontal: 16 }}>
                                     <TextButton text={"삭제하기"} onPress={() => {
                                         setBottomSheetShow(false)
-                                        setModalShow(true)
+                                        setRemoveModalShow(true)
                                     }} paddingVertical={16} />
                                 </View> :
                                 <View style={{ paddingHorizontal: 16 }}>
@@ -120,7 +122,16 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
                                         }
                                     }} paddingVertical={16} />
                                     <Line />
-                                    <TextButton text={"사용자 차단하기"} onPress={() => { }} paddingVertical={16} />
+                                    <TextButton text={"사용자 차단하기"} onPress={async () => {
+                                        const isLogin = await checkIsLogin()
+                                        if (isLogin) {
+                                            setBottomSheetShow(false)
+                                            setBlockModalShow(true)
+                                        } else {
+                                            dispatch(action.setMoreButtonComment(undefined))
+                                            dispatch(loginAction.callBottomSheet())
+                                        }
+                                     }} paddingVertical={16} />
                                 </View>
                         }
                     </View>
@@ -135,16 +146,31 @@ const StoryCommentScreen = ({ route, navigation }: storyCommentScreenProps) => {
             <ConfirmModal mainText={"댓글을\n삭제하시겠습니까?"} confirmButtonText={"삭제하기"} confirmCallback={async () => {
                 if (commentListInfo.moreButtonTargetComment) {
                     const response = await callNeedLoginApi(() => deleteStoryComment(route.params.storyIdx, commentListInfo.moreButtonTargetComment!!.commentIdx))
-
+                    
                     if (response?.data?.deleted) {
                         refresh()
                     }
                 }
-            }} isShow={modalShow} setIsShow={(isShow) => {
+            }} isShow={removeModalShow} setIsShow={(isShow) => {
                 if (!isShow) {
                     dispatch(action.setMoreButtonComment(undefined))
                 }
-                setModalShow(isShow)
+                setRemoveModalShow(isShow)
+            }} />
+
+            <ConfirmModal mainText={`${commentListInfo.moreButtonTargetComment?.user.nickname}` + "님을\n차단하시겠습니까?"} confirmButtonText={"차단하기"} confirmCallback={async () => {
+                if (commentListInfo.moreButtonTargetComment) {
+                    const response = await callNeedLoginApi(() => postBlockUser(commentListInfo.moreButtonTargetComment!!.user.userIdx))
+
+                    if (response?.data?.blocked) {
+                        refresh()
+                    }
+                }
+            }} isShow={blockModalShow} setIsShow={(isShow) => {
+                if (!isShow) {
+                    dispatch(action.setMoreButtonComment(undefined))
+                }
+                setBlockModalShow(isShow)
             }} />
         </SafeAreaView>
     )
