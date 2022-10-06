@@ -9,6 +9,7 @@ import { rootDispatch } from "../../../redux/store";
 import textStyle from "../../../style/textStyle";
 import { splashScreenProps } from "../../../type/navigate/types";
 import callNeedLoginApi from "../../../util/callNeedLogin";
+import { PlaiulNavigation } from "../../../util/navigation";
 import { getAccessToken, removeAccessToken, removeRefreshToken } from "../../../util/token";
 import { Logo } from "../../atoms/logo";
 
@@ -19,6 +20,7 @@ const SplashScreen = ({navigation} : splashScreenProps) => {
 
     useEffect(() => {
         setTimeout(autoLogin, 500)
+        PlaiulNavigation.init(() => {navigation.push("LoginHome")})
     }, [])
 
     // 아직 자동 로그인 api 대신 마이페이지 사용자 조회 api 사용
