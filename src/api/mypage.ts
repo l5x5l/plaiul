@@ -72,7 +72,7 @@ export const getMyCommentPost = async(category : postCategory, cursor ?: string)
 export const modifyProfile = async(body : FormData) => {
     try {
         const accessToken = await getAccessToken()
-        const response = await axios.patch(`${mypageBaseUri}/profile`, body, {headers : accessToken ? getDefaultHeader(accessToken) : undefined})
+        const response = await axios.patch(`${mypageBaseUri}/profile`, body, {headers : {  "content-type": "multipart/form-data", Authorization : `Bearer ${accessToken}`}})
         return toApiBaseResponse<modifyResult, undefined>(response)
     } catch (error) {
         return toApiErrorResponse<modifyResult, undefined>(error)
