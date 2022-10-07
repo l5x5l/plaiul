@@ -15,34 +15,41 @@ import { Line } from "../../atoms/line";
 const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
     const { colors } = useTheme()
     const prevNickname = route.params.userInfo.nickname
-    const prevProfile = route.params.userInfo.profile
+    const prevProfileImageUri = route.params.userInfo.profile
     const [nickname, setNickname] = useState(route.params.userInfo.nickname)
-    const [profile, setProfile] = useState(route.params.userInfo.profile)
+    const [profileImageUri, setProfileImageUri] = useState(route.params.userInfo.profile)
 
     const checkAvailable = () => {
-        return (nickname !== prevNickname || prevProfile !== profile)
+        return (nickname !== prevNickname || prevProfileImageUri !== profileImageUri)
     }
 
     const editProfile = async (newNickname: string, newProfileUri?: string) => {
         const body = new FormData()
-        if (newNickname !== prevProfile) {
+        if (newNickname !== prevProfileImageUri) {
             body.append("nickname", newNickname)
         }
-        if (newProfileUri !== prevProfile && newProfileUri !== undefined) {
+        if (newProfileUri !== prevProfileImageUri) {
+            setFormDataProfileImage(body, newProfileUri)
+        }
+ 
+        const result = await callNeedLoginApi(() => modifyProfile(body))
+
+        if (result?.data?.modified) {
+            navigation.goBack()
+        }
+    }
+
+    const setFormDataProfileImage = (body: FormData, newProfileUri?: string) => {
+        const useDefaultProfile = newProfileUri === undefined
+        if (useDefaultProfile) {
+            body.append("defaultProfile", true)
+        } else {
             const newProfile = {
                 uri: newProfileUri,
                 type: "multipart/form-data",
                 name: `${route.params.userInfo.userIdx}_profile_image`
             }
             body.append("profile", newProfile)
-        }
-        else if (newProfileUri !== prevProfile && newProfileUri === undefined) {
-            body.append("defaultProfile", true)
-        }
-        const result = await callNeedLoginApi(() => modifyProfile(body))
-        console.log(JSON.stringify(result))
-        if (result?.data?.modified) {
-            navigation.goBack()
         }
     }
 
@@ -54,26 +61,27 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                 </View>
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 60 }}>
                     <View>
-
-                        <Pressable>
-                            <Image source={{ uri: profile }} style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
-                        </Pressable>
                         {
-                            profile &&
-                            <Pressable onPress={() => { setProfile(undefined) }} style={{ position: "absolute", top: 0, right: 0 }}>
+                            profileImageUri ?
+                                <Image source={{ uri: profileImageUri }} style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
+                                :
+                                <View style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
+                        }
+                        {
+                            profileImageUri &&
+                            <Pressable onPress={() => { setProfileImageUri(undefined) }} style={{ position: "absolute", top: 0, right: 0 }}>
                                 <View style={{ height: 32, width: 32, backgroundColor: colors.border, alignItems: "center", justifyContent: "center", borderRadius: 16 }}>
                                     <Image source={require("../../../assets/images/cancel_24.png")} style={{ height: 24, width: 24, tintColor: colors.background }} />
                                 </View>
                             </Pressable>
                         }
-
                     </View>
 
                     <Pressable onPress={async () => {
                         const response = await launchImageLibrary({ mediaType: "photo" })
                         if (response.assets != undefined) {
                             const uri = (response.assets[0].uri === undefined) ? undefined : response.assets[0].uri
-                            setProfile(uri)
+                            setProfileImageUri(uri)
                         }
                     }}>
                         <Text style={[textStyle.caption, { color: colors.text, padding: 8 }]}>사진 변경하기</Text>
@@ -91,10 +99,9 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                 </View>
                 <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
                     <StyledButton onClick={async () =>
-                        editProfile(nickname, profile)
+                        editProfile(nickname, profileImageUri)
                     } style={"background"} text={"프로필 수정하기"} height={56} enable={checkAvailable()} />
                 </View>
-
             </View>
         </SafeAreaView>
     )
