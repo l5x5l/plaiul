@@ -23,9 +23,11 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     const [loginResult, setLoginResult] = useState<apiBaseResponse<loginResult, undefined>>()
     const dispatch = useDispatch<rootDispatch>()
     const action = LoginSlice.actions
+    const [isLoading, setIsLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string>()
 
     useEffect(() => {
-        const saveTokens = async (refreshToken : string, accessToken : string) => {
+        const saveTokens = async (refreshToken: string, accessToken: string) => {
             await setRefreshToken(refreshToken)
             await setAccessToken(accessToken)
             navigation.goBack()
@@ -36,7 +38,11 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
             if (loginResult.data !== undefined) {
                 saveTokens(loginResult.data.refreshToken, loginResult.data.accessToken)
             } else {
-                //console.log(JSON.stringify(loginResult))
+                if (loginResult.code === 1000) {
+                    setErrorMessage("이메일 또는 비밀번호의 형식을 맞춰주세요")
+                } else {
+                    setErrorMessage(loginResult.message)
+                }
             }
         }
     }, [loginResult])
@@ -47,20 +53,26 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
                 <Logo />
                 <View style={{ paddingHorizontal: 16 }}>
                     <Text style={[textStyle.headline1, { color: colors.text, marginTop: 96 }]}>Login</Text>
-                    <View style={{ flexDirection: "row", width: "100%", marginTop: 40, alignItems: "center", height : 48}}>
-                        <Image source={require("../../../../assets/images/profile_20.png")} style={{ width: 20, height: 20, tintColor: colors.border,  paddingVertical : 8 }} />
-                        <TextInput style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8 }]} onChangeText={setEmail}/>
+                    <View style={{ flexDirection: "row", width: "100%", marginTop: 40, alignItems: "center", height: 48 }}>
+                        <Image source={require("../../../../assets/images/profile_20.png")} style={{ width: 20, height: 20, tintColor: colors.border, paddingVertical: 8 }} />
+                        <TextInput style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8 }]} onChangeText={setEmail} />
                     </View>
                     <Line />
-                    <View style={{ flexDirection: "row", width: "100%", marginTop: 8, alignItems : "center",  height : 48}}>
-                        <Image source={require("../../../../assets/images/lock_20.png")} style={{ height: 20, width: 20, tintColor: colors.border, paddingVertical : 8  }} resizeMode="contain" />
-                        <TextInput onChangeText={setPassword} style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8}]} secureTextEntry={true}/>
+                    <View style={{ flexDirection: "row", width: "100%", marginTop: 8, alignItems: "center", height: 48 }}>
+                        <Image source={require("../../../../assets/images/lock_20.png")} style={{ height: 20, width: 20, tintColor: colors.border, paddingVertical: 8 }} resizeMode="contain" />
+                        <TextInput onChangeText={setPassword} style={[textStyle.body1, { color: colors.text, flex: 1, marginStart: 8 }]} secureTextEntry={true} />
                     </View>
                     <Line />
-                    <StyledButton onClick={ async () => {
+                    {
+                        errorMessage !== undefined && <Text style={[textStyle.caption, { color: colors.notification, marginTop: 16 }]}>{errorMessage}</Text>
+                    }
+                    <StyledButton onClick={async () => {
+                        setErrorMessage(undefined)
+                        setIsLoading(true)
                         const response = await postLogin(email, password)
+                        setIsLoading(false)
                         setLoginResult(response)
-                    }} style={"background"} text={"로그인"} marginTop={24} />
+                    }} style={"background"} text={"로그인"} marginTop={24} enable={!isLoading} />
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "center", position: "absolute", bottom: 48, start: 0, end: 0 }}>
                     <Pressable onPress={() => { navigation.push("SignUp") }}>
