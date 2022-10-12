@@ -29,23 +29,22 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
 
     const loadTipDetail = async () => {
         const response = await callNeedLoginApi<TipDeatilDto, any>(() => getTipDetail(route.params.tipIdx))
-        if (response?.data)
+        if (response?.data){
             setTipDetail(response.data)
+        }
     }
 
     const toggleLike = async () => {
         const response = await callNeedLoginApi<patchToggleLikeResult, any>(() => patchToggleTipLike(route.params.tipIdx))
         if (response?.data && tipDetail) {
-            const temp = { ...tipDetail }
-            temp.isLiked = response.data.isLiked
-            if (temp.isLiked) {
-                temp.likeCnt += 1
+            const tempTipDetail = { ...tipDetail }
+            tempTipDetail.isLiked = response.data.isLiked
+            if (tempTipDetail.isLiked) {
+                tempTipDetail.likeCnt += 1
             } else {
-                temp.likeCnt -= 1
+                tempTipDetail.likeCnt -= 1
             }
-
-            setTipDetail(temp)
-
+            setTipDetail(tempTipDetail)
         }
     }
 
@@ -63,11 +62,10 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                     <BackButton onPress={() => { navigation.goBack() }} />
                     {
-                        tipDetail?.isWriter ?
-                            <MoreButton margin={4} onPress={() => {
-                                setBottomSheetShow(true)
-                            }} />
-                            : null
+                        tipDetail?.isWriter &&
+                        <MoreButton margin={4} onPress={() => {
+                            setBottomSheetShow(true)
+                        }} />
                     }
                 </View>
                 <ScrollView style={TipDetailStyle.mainContainer}>
@@ -130,26 +128,16 @@ const TipDetailScreen = ({ route, navigation }: TipDeatilScreenProps) => {
             </View>
             <View style={{ position: "absolute", bottom: 0, height: "100%" }}>
                 <BottomSheet children={
-                    <View style={{ width: "100%", paddingVertical: 40 }}>
-                        {
-                            (true) ?
-                                <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"수정하기"} onPress={() => {
-                                        navigation.push("TipEdit", { tip: tipDetail, modifySuccess: () => { loadTipDetail() } })
-                                        setBottomSheetShow(false)
-                                    }} paddingVertical={16} />
-                                    <Line />
-                                    <TextButton text={"삭제하기"} onPress={() => {
-                                        setBottomSheetShow(false)
-                                        setModalShow(true)
-                                    }} paddingVertical={16} />
-                                </View> :
-                                <View style={{ paddingHorizontal: 16 }}>
-                                    <TextButton text={"사용자 차단하기"} onPress={() => {
-
-                                    }} paddingVertical={16} />
-                                </View>
-                        }
+                    <View style={{ width: "100%", paddingVertical: 40, paddingHorizontal: 16 }}>
+                        <TextButton text={"수정하기"} onPress={() => {
+                            navigation.push("TipEdit", { tip: tipDetail, modifySuccess: () => { loadTipDetail() } })
+                            setBottomSheetShow(false)
+                        }} paddingVertical={16} />
+                        <Line />
+                        <TextButton text={"삭제하기"} onPress={() => {
+                            setBottomSheetShow(false)
+                            setModalShow(true)
+                        }} paddingVertical={16} />
                     </View>
                 } isShow={bottomSheetShow} setIsShow={setBottomSheetShow} />
             </View>
