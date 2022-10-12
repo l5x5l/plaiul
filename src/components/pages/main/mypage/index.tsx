@@ -36,6 +36,10 @@ const MyPageScreen = (props: MyPageScreenProps) => {
         }
     }
 
+    const modifyProfile = (newProfile : UserDto) => {
+        setUserInfo(newProfile)
+    }
+
     useEffect(() => {
         if (isLogin) {
             loadMyPageData()
@@ -50,7 +54,12 @@ const MyPageScreen = (props: MyPageScreenProps) => {
                 userInfo !== undefined ?
                     <View style={MyPageStyle.titleArea}>
                         <Text style={[textStyle.headline1, { color: colors.text, flex: 1 }]}>{`반가워요\n${userInfo.nickname}님!`}</Text>
-                        <Image style={{ height: 64, width: 64, borderRadius: 32 }} source={{ uri: (userInfo.profile !== undefined) ? userInfo.profile : "https://reactnative.dev/img/tiny_logo.png" }} />
+                        {
+                            userInfo.profile !== undefined ?
+                            <Image style={{ height: 64, width: 64, borderRadius: 32, backgroundColor : colors.card }} source={{ uri: userInfo.profile }} />
+                            :
+                            <View style={{ height: 64, width: 64, borderRadius: 32, backgroundColor : colors.card }}/>
+                        }
                     </View>
                     :
                     <Pressable onPress={() => {
@@ -86,7 +95,7 @@ const MyPageScreen = (props: MyPageScreenProps) => {
             }} enable={isLogin} />
             <TextButton text={"프로필 수정"} onPress={() => {
                 if (userInfo) {
-                    props.navigation.push("EditProfile", { userInfo })
+                    props.navigation.push("EditProfile", { userInfo, applyNewProfile : modifyProfile })
                 }
             }} enable={isLogin} />
             <TextButton text={"고객센터"} onPress={() => {

@@ -39,7 +39,8 @@ type RootStackParamList = {
     },
     Splash : undefined,
     EditProfile : {
-        userInfo : UserDto
+        userInfo : UserDto,
+        applyNewProfile : (newProfile : UserDto) => void
     },
     MyPagePost : {
         category : myPageLikeCategory,

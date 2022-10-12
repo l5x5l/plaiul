@@ -11,6 +11,7 @@ import callNeedLoginApi from "../../../util/callNeedLogin";
 import { BackButton } from "../../atoms/backButton";
 import { StyledButton } from "../../atoms/button";
 import { Line } from "../../atoms/line";
+import { UserDto } from "../../../type/DTO/userDto"
 
 const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
     const { colors } = useTheme()
@@ -18,6 +19,7 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
     const prevProfileImageUri = route.params.userInfo.profile
     const [nickname, setNickname] = useState(route.params.userInfo.nickname)
     const [profileImageUri, setProfileImageUri] = useState(route.params.userInfo.profile)
+    const [isLoading, setIsLoading] = useState(false)
 
     const checkAvailable = () => {
         return (nickname !== prevNickname || prevProfileImageUri !== profileImageUri)
@@ -31,10 +33,18 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
         if (newProfileUri !== prevProfileImageUri) {
             setFormDataProfileImage(body, newProfileUri)
         }
- 
+
         const result = await callNeedLoginApi(() => modifyProfile(body))
 
-        if (result?.data?.modified) {
+        setIsLoading(false)
+        const modifySuccess = result?.data?.modified
+        if (modifySuccess === true) {
+            const newProfile: UserDto = {
+                userIdx: route.params.userInfo.userIdx,
+                nickname: newNickname,
+                profile: newProfileUri
+            }
+            route.params.applyNewProfile(newProfile)
             navigation.goBack()
         }
     }
@@ -62,13 +72,13 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 60 }}>
                     <View>
                         {
-                            profileImageUri ?
+                            profileImageUri !== undefined ?
                                 <Image source={{ uri: profileImageUri }} style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
                                 :
                                 <View style={[EditProfileStyle.profileImage, { backgroundColor: colors.card }]} />
                         }
                         {
-                            profileImageUri &&
+                            profileImageUri !== undefined &&
                             <Pressable onPress={() => { setProfileImageUri(undefined) }} style={{ position: "absolute", top: 0, right: 0 }}>
                                 <View style={{ height: 32, width: 32, backgroundColor: colors.border, alignItems: "center", justifyContent: "center", borderRadius: 16 }}>
                                     <Image source={require("../../../assets/images/cancel_24.png")} style={{ height: 24, width: 24, tintColor: colors.background }} />
@@ -78,7 +88,7 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                     </View>
 
                     <Pressable onPress={async () => {
-                        const response = await launchImageLibrary({ mediaType: "photo" })
+                        const response = await launchImageLibrary({ mediaType: "photo", maxHeight : 256, maxWidth : 256 })
                         if (response.assets != undefined) {
                             const uri = (response.assets[0].uri === undefined) ? undefined : response.assets[0].uri
                             setProfileImageUri(uri)
@@ -98,9 +108,10 @@ const EditProfileScreen = ({ navigation, route }: editProfileScreenProps) => {
                     </View>
                 </View>
                 <View style={{ position: "absolute", bottom: 0, width: "100%" }}>
-                    <StyledButton onClick={async () =>
+                    <StyledButton onClick={async () => {
+                        setIsLoading(true)
                         editProfile(nickname, profileImageUri)
-                    } style={"background"} text={"프로필 수정하기"} height={56} enable={checkAvailable()} />
+                    }} style={"background"} text={"프로필 수정하기"} height={56} enable={checkAvailable() && !isLoading} />
                 </View>
             </View>
         </SafeAreaView>
