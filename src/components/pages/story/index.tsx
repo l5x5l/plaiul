@@ -21,6 +21,7 @@ import LoginSlice from "../../../redux/login/loginSlice";
 import { checkIsLogin } from "../../../util/token";
 import { postBlockUser } from "../../../api/user";
 import postListSlice from "../../../redux/story/postListSlice";
+import { ImagePagerView } from "../../blocks/imagePagerView";
 
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
@@ -56,8 +57,7 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
                             setBottomSheetShow(true)
                         }} />
                     </View>
-
-                    <Image style={{ width: "100%", aspectRatio: 1, backgroundColor: colors.card }} source={{ uri: (story.value.images && story.value.images.length >= 1) ? story.value.images[0] : undefined }} />
+                    <ImagePagerView images={story.value.images} />
                     <View style={{ padding: 16 }}>
                         <Text style={[textStyle.headline1, { color: colors.text }]}>{(!story.isError) ? (story.value.title) : "에러입니다."}</Text>
                         <Pressable style={{ marginTop: 16 }} onPress={() => { navigation.push("profile", { userInfo: story.value.user }) }}>
