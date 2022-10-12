@@ -35,7 +35,7 @@ const SplashScreen = ({navigation} : splashScreenProps) => {
                 await removeRefreshToken()
             }
         } 
-        navigation.navigate("Main")
+        navigation.replace("Main")
     }
 
     return (
