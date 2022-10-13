@@ -22,7 +22,7 @@ import { checkIsLogin } from "../../../util/token";
 import { postBlockUser } from "../../../api/user";
 import postListSlice from "../../../redux/story/postListSlice";
 import { ImagePagerView } from "../../blocks/imagePagerView";
-
+import analytics from '@react-native-firebase/analytics'
 
 const StoryScreen = ({ route, navigation }: storyScreenProps) => {
     const { colors } = useTheme();
@@ -39,6 +39,9 @@ const StoryScreen = ({ route, navigation }: storyScreenProps) => {
 
     useEffect(() => {
         dispatch(loadStory(route.params.storyIdx))
+        analytics().logEvent("story_lookup", {
+            storyIdx : route.params.storyIdx
+        })
 
         return () => {
             dispatch(action.clear())
