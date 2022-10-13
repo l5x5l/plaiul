@@ -12,7 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1FC23FF23CF6DA929CCD6C8F /* Pods_plaiul.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78FDDC645C61CB7C1D07E4DB /* Pods_plaiul.framework */; };
-		61796FC128F7AAA700BCEC95 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61796FC028F7AAA700BCEC95 /* GoogleService-Info.plist */; };
+		6153E2CF28F81D34003B7A85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6153E2CE28F81D34003B7A85 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		F36CE979235DA3CECD809CA0 /* Pods_plaiul_plaiulTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D99D54EA01039783E828FE /* Pods_plaiul_plaiulTests.framework */; };
 /* End PBXBuildFile section */
@@ -40,7 +40,7 @@
 		3B4392A12AC88292D35C810B /* Pods-plaiul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-plaiul.debug.xcconfig"; path = "Target Support Files/Pods-plaiul/Pods-plaiul.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-plaiul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-plaiul.release.xcconfig"; path = "Target Support Files/Pods-plaiul/Pods-plaiul.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-plaiul-plaiulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-plaiul-plaiulTests.debug.xcconfig"; path = "Target Support Files/Pods-plaiul-plaiulTests/Pods-plaiul-plaiulTests.debug.xcconfig"; sourceTree = "<group>"; };
-		61796FC028F7AAA700BCEC95 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6153E2CE28F81D34003B7A85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		78FDDC645C61CB7C1D07E4DB /* Pods_plaiul.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_plaiul.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = plaiul/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-plaiul-plaiulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-plaiul-plaiulTests.release.xcconfig"; path = "Target Support Files/Pods-plaiul-plaiulTests/Pods-plaiul-plaiulTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -88,6 +88,7 @@
 		13B07FAE1A68108700A75B9A /* plaiul */ = {
 			isa = PBXGroup;
 			children = (
+				6153E2CE28F81D34003B7A85 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -118,7 +119,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				61796FC028F7AAA700BCEC95 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* plaiul */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* plaiulTests */,
@@ -247,8 +247,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				6153E2CF28F81D34003B7A85 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				61796FC128F7AAA700BCEC95 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
